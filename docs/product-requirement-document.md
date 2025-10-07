@@ -1,7 +1,3 @@
-As your **Business Analyst/Product Owner**, here’s how I would start shaping and clarifying the vision for your new **expense-tracker-serverless-python** project:
-
-***
-
 **Business/Project Vision**
 
 - Build a **production-ready SaaS expense tracker** for individuals or small businesses needing simple, secure expense management.
