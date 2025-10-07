@@ -1,0 +1,19 @@
+expense-tracker-serverless-python/
+│
+├── backend/
+│   ├── expenses/              # Python Lambda for expense logic
+│   ├── receipts/              # Python Lambda for receipt upload logic
+│   └── shared/                # Shared code/utilities
+│
+├── infra/
+│   ├── template.yaml          # AWS SAM/CloudFormation template
+│   └── scripts/               # Helper deployment/scripts
+│
+├── tests/                     # Unit and integration tests
+│
+├── docs/
+│   ├── architecture.md        # Architecture diagrams, explanations
+│   ├── api-spec.md            # API contract/specification
+│   └── auth.md                # Cognito setup and rationale
+│
+└── README.md                  # Project overview and setup
