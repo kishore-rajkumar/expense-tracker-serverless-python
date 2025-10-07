@@ -1,6 +1,6 @@
 # Expense Tracker Serverless (Python)
 
-A hands-on, fully serverless SaaS application (Expense Tracker) using AWS Lambda (Python), API Gateway, DynamoDB, S3, Cognito, and Step Functions.
+A fully serverless SaaS application (Expense Tracker) using AWS Lambda (Python), API Gateway, DynamoDB, S3, Cognito, and Step Functions.
 
 ## Features
 - User registration and login (Cognito)
