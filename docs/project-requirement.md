@@ -19,6 +19,25 @@
 
 ---
 
+## 3. MVP Features
+**Essential for First Release:**
+
+1. **User Registration & Login** (with secure authentication)
+2. **Add Expense** (amount, date, category, notes)
+3. **View Expenses** (list with filter/search by date, category)
+4. **Edit/Delete Expense**
+5. **Expense Categories** (predefined and user-customizable)
+6. **Basic Dashboard** (summary: total expenses, category breakdown)
+7. **Multi-Tenancy Support** (each user’s data is strictly isolated)
+8. **Responsive Web UI** (works well on desktop and mobile browsers)
+
+**Must-have Reporting, Integrations, or Mobile Support:**
+- **Reporting:** Download/export expenses as CSV (must-have for both individuals and small businesses).
+- **Integrations:** None required for MVP, but architecture should allow for future integration (e.g., email receipts, invoicing, or accounting APIs).
+- **Mobile Support:** Responsive PWA (Progressive Web App) for now—native mobile apps can be future enhancements.
+
+---
+
 ## 3. Initial User Stories (MVP)
 
 - As a new user, I want to register and log in securely to start tracking expenses.
