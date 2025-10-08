@@ -79,7 +79,20 @@
 - **Avoid:** Traditional VM-based servers, monolithic architectures, or non-AWS serverless tools for MVP.
 ---
 
-## 8. Leadership & Team Objectives
+## 8. Summary Table
+| Area |	MVP Requirement |
+| ---- | ---------------- |
+| Core Features | Registration, CRUD expenses, categories, dashboard |
+| Reporting | CSV export |
+| Integrations | None for MVP |
+| Mobile | Responsive web app (PWA) |
+| Auth | Secure password login (Cognito), MFA optional |
+| Compliance | Encryption in transit/at rest, GDPR-ready design |
+| Launch Timeframe | 8-12 weeks |
+| Tech Stack | AWS Serverless, React+TS, avoid non-cloud-native |
+
+---
+## 9. Leadership & Team Objectives
 
 - **Architecture & Decisions:** Document rationale for service and design choices.
 - **Task Planning:** Break down requirements, manage team roles, and track progress.
@@ -90,7 +103,7 @@
 
 ---
 
-## 9. Next Steps
+## 10. Next Steps
 
 1. **Refine User Stories:** Start with registration, add/view expense, upload receipt.
 2. **Define Data Models:** Expense entity, receipt object, user profile.
@@ -101,7 +114,7 @@
 
 ---
 
-## 10. Out of Scope for MVP
+## 11. Out of Scope for MVP
 
 - Advanced analytics/reporting dashboards beyond monthly summary.
 - Multi-tenancy or complex RBAC.
@@ -110,7 +123,7 @@
 
 ---
 
-## 11. Deliverables
+## 12. Deliverables
 
 - Source code repository (Python backend, frontend, infrastructure-as-code).
 - Deployment scripts and documentation.
