@@ -38,7 +38,7 @@
 
 ---
 
-## 3. Initial User Stories (MVP)
+## 4. Initial User Stories (MVP)
 
 - As a new user, I want to register and log in securely to start tracking expenses.
 - As a logged-in user, I want to add expenses, view my expense list, and upload receipts.
@@ -49,7 +49,7 @@
 
 ---
 
-## 4. Technical Acceptance Criteria
+## 5. Technical Acceptance Criteria
 
 - **Domain-driven design:** Clear separation between core business logic (expense domain), infrastructure (AWS services), and presentation (API interface).
 - **Authentication:** AWS Cognito with group/role policies and examples for public vs. private API routes.
@@ -58,8 +58,28 @@
 - **Testing:** End-to-end tests covering authentication, CRUD, and workflows.
 
 ---
+## 6. Security & Compliance
+**Authentication:**
+- **Secure password login using AWS Cognito** (built-in support for password policies, email/SMS verification).
+- **Multi-Factor Authentication (MFA):** Optional for MVP, but recommended to design for easy addition post-MVP.
 
-## 5. Leadership & Team Objectives
+**Compliance:**
+- **Data Privacy:** Ensure user data is encrypted at rest (DynamoDB, S3) and in transit (HTTPS).
+- **GDPR/CCPA:** Not strictly required for MVP, but design should allow for data export/deletion if needed.
+- **Audit Logging:** Basic user action logging in CloudWatch or DynamoDB for troubleshooting.
+
+---
+## 7. Other Constraints
+**Target Launch Timeframe:**
+- **8-12 weeks** is typical for a polished MVP, assuming a small focused team and part-time effort. Can be accelerated for demo purposes.
+
+**Tech Stack Preferences:**
+- **Must Use:** AWS serverless stack (API Gateway, Lambda [Node.js or Python], DynamoDB, Cognito, S3, CloudFront, IAM, CloudWatch, SAM/CDK/Serverless Framework for infra-as-code, etc.).
+- **Frontend:** React (with TypeScript) is industry standard for modern SaaS, built as a SPA and deployed to S3 + CloudFront.
+- **Avoid:** Traditional VM-based servers, monolithic architectures, or non-AWS serverless tools for MVP.
+---
+
+## 8. Leadership & Team Objectives
 
 - **Architecture & Decisions:** Document rationale for service and design choices.
 - **Task Planning:** Break down requirements, manage team roles, and track progress.
@@ -70,7 +90,7 @@
 
 ---
 
-## 6. Next Steps
+## 9. Next Steps
 
 1. **Refine User Stories:** Start with registration, add/view expense, upload receipt.
 2. **Define Data Models:** Expense entity, receipt object, user profile.
@@ -81,7 +101,7 @@
 
 ---
 
-## 7. Out of Scope for MVP
+## 10. Out of Scope for MVP
 
 - Advanced analytics/reporting dashboards beyond monthly summary.
 - Multi-tenancy or complex RBAC.
@@ -90,7 +110,7 @@
 
 ---
 
-## 8. Deliverables
+## 11. Deliverables
 
 - Source code repository (Python backend, frontend, infrastructure-as-code).
 - Deployment scripts and documentation.
