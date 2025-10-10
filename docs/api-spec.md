@@ -44,22 +44,22 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 - Creates a new expense entry.
 - **Auth:** Required
 - **Request:**
-```
+`
 {
 "amount": 123.45,
 "category": "Travel",
 "date": "2025-10-10",
 "description": "Cab ride to client office"
 }
-```
+`
 
 - **Response:**
-```
+`
 {
 "expenseId": "abc123",
 "status": "success"
 }
-```
+`
 
 #### GET /expenses
 - Retrieves all expenses for the authenticated user.
