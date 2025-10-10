@@ -41,23 +41,22 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 ### 1. Expenses
 
 #### POST /expenses
-- Creates a new expense entry.
-- **Auth:** Required
-- **Request:**
-`
-{
-"amount": 123.45,
-"category": "Travel",
-"date": "2025-10-10",
-"description": "Cab ride to client office"
-}
-`
+- **Description:** Create a new expense entry for the authenticated user.
+- **Auth:** Required (Cognito JWT)
+- **Request Schema:**
+`{
+  "amount": 123.45,
+  "category": "Travel",
+  "date": "2025-10-10",
+  "description": "Uber to airport",
+  "receiptId": "optional-receipt-id"
+}`
 
 - **Response:**
 `
 {
-"expenseId": "abc123",
-"status": "success"
+  "expenseId": "abc123",
+  "status": "success"
 }
 `
 
