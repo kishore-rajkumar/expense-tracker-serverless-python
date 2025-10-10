@@ -61,7 +61,21 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 `
 
 #### GET /expenses
-- Retrieves all expenses for the authenticated user.
+- Description: Retrieve all expenses for the authenticated user.
+- Auth: Required
+- Response Schema:
+ `[
+  {
+    "expenseId": "abc123",
+    "amount": 123.45,
+    "category": "Travel",
+    "date": "2025-10-10",
+    "description": "Uber to airport",
+    "receiptUrl": "https://bucket/file.jpg"
+  },
+  ...
+]`
+
 
 #### GET /expenses/{expenseId}
 - Retrieves a single expense by ID.
