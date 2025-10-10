@@ -61,9 +61,9 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 `
 
 #### GET /expenses
-- Description: Retrieve all expenses for the authenticated user.
-- Auth: Required
-- Response Schema:
+- **Description:** Retrieve all expenses for the authenticated user.
+- **Auth:** Required
+- **Response Schema:**
  `[
   {
     "expenseId": "abc123",
@@ -78,14 +78,49 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 
 
 #### GET /expenses/{expenseId}
-- Retrieves a single expense by ID.
+- **Description:** Retrieve a single expense by ID.
+- **Auth:** Required
+- **Response Schema:**
+  `
+  {
+  "expenseId": "abc123",
+  "amount": 123.45,
+  "category": "Travel",
+  "date": "2025-10-10",
+  "description": "Uber to airport",
+  "userId": "user123",
+  "receiptUrl": "https://bucket/file.jpg"
+}
+`
 
 #### PUT /expenses/{expenseId}
-- Updates an expense entry.
+- **Description:** Update an expense by ID.
+- **Auth:** Required
+- **Request Schema:** (fields to update)
+`
+{
+  "amount": 130.00,
+  "category": "Business Travel"
+}
+`
+- **Response Schema:**
+`
+{
+  "expenseId": "abc123",
+  "status": "updated"
+}
+`
 
 #### DELETE /expenses/{expenseId}
-- Removes an expense.
-
+- **Description:** Delete an expense by ID.
+- **Auth:** Required
+- **Response Schema:**
+`
+{
+  "expenseId": "abc123",
+  "status": "deleted"
+}
+`
 ---
 
 ### 2. Receipts
