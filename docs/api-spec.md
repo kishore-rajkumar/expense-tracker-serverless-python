@@ -128,13 +128,45 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 ### 2. Receipts
 
 #### POST /receipts
-- Uploads a receipt for a given expense.
-
+- **Description:** Upload a receipt for a specific expense.
+- **Auth:** Required (Cognito JWT)
+- **Request**: multipart/form-data
+    - Fields:
+        - expenseId: string (required) – Expense to link receipt to
+        - file: binary (required) – The receipt image/PDF file
+- **Response Schema:**
+`
+{
+  "receiptId": "rct789",
+  "expenseId": "exp123",
+  "fileUrl": "https://bucket/receipts/rct789.jpg",
+  "uploadedAt": "2025-10-11T19:22:30Z",
+  "status": "success"
+}
+`
 #### GET /receipts/{receiptId}
-- Retrieves a receipt by ID.
+- **Description:** Retrieve details and URL for a receipt by its ID.
+- **Auth:** Required
+- **Response Schema:**
+`
+{
+  "receiptId": "rct789",
+  "expenseId": "exp123",
+  "fileUrl": "https://bucket/receipts/rct789.jpg",
+  "uploadedAt": "2025-10-11T19:22:30Z"
+}
+`
 
 #### DELETE /receipts/{receiptId}
-- Deletes a receipt.
+- **Description:** Delete a receipt by its ID; also removes file from storage.
+- **Auth:** Required
+- **Response Schema:**
+`
+{
+  "receiptId": "rct789",
+  "status": "deleted"
+}
+`
 
 ---
 
