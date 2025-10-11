@@ -310,10 +310,109 @@ _Clients should always check for the **"status": "error"** property and handle d
 ---
 
 ## Example Requests/Responses
-(Add examples for each critical endpoint here.)
+
+#### Create an Expense
+- **Request:** POST /expenses
+```
+{
+  "amount": 250.00,
+  "category": "Meals",
+  "date": "2025-10-11",
+  "description": "Business lunch with client"
+}
+```
+- **Successful Response:**
+```
+{
+  "expenseId": "exp12345",
+  "status": "success"
+}
+```
+
+#### Retrieve All Expenses
+
+- **Request:** GET /expenses
+
+- **Successful Response:**
+```
+[
+  {
+    "expenseId": "exp12345",
+    "amount": 250.00,
+    "category": "Meals",
+    "date": "2025-10-11",
+    "description": "Business lunch with client",
+    "receiptUrl": "https://bucket/receipt1.jpg"
+  },
+  {
+    "expenseId": "exp12346",
+    "amount": 80.75,
+    "category": "Transport",
+    "date": "2025-10-10",
+    "description": "Uber ride",
+    "receiptUrl": "https://bucket/receipt2.jpg"
+  }
+]
+```
+
+#### Upload a Receipt
+
+- **Request:** POST /receipts (multipart/form-data)
+  - **expenseId:** "exp12345"
+  - **file:** [Receipt image file]
+- **Successful Response:**
+```
+{
+  "receiptId": "rec98765",
+  "expenseId": "exp12345",
+  "receiptUrl": "https://bucket/receipt98765.jpg",
+  "uploadedAt": "2025-10-11T18:22:11Z",
+  "status": "success"
+}
+```
+
+#### Register a User
+- **Request:** POST /users/register
+```
+{
+  "name": "Kishore Rajkumar",
+  "email": "kishore@example.com",
+  "password": "secretpassword"
+}
+```
+- **Successful Response:**
+```
+{
+  "userId": "user001",
+  "status": "registered"
+}
+```
+
+### Get User Profile
+- **Request:** GET /users/user001
+- **Successful Response:**
+```
+{
+  "userId": "user001",
+  "name": "Kishore Rajkumar",
+  "email": "kishore@example.com",
+  "registrationDate": "2025-10-11T13:40:00Z"
+}
+```
 
 ---
 
 ## Changelog
 - `2025-10-10`: Initial API spec created (Expenses, Receipts, Users v1).
+
+
+---
+
+## Changelog
+
+| Date       | Version | Description                                    | Author           |
+|------------|---------|------------------------------------------------|------------------|
+| 2025-10-10 | 1.0     | Initial API spec created with Expenses, Receipts, Users endpoints. | Kishore Rajkumar |
+| 2025-10-11 | 1.1     | Added detail in the API spec (Expenses, Receipts, Users) ; Added detailed error handling section and example requests/responses. | Kishore Rajkumar |
+
 
