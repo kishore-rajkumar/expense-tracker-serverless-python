@@ -403,12 +403,6 @@ _Clients should always check for the **"status": "error"** property and handle d
 ---
 
 ## Changelog
-- `2025-10-10`: Initial API spec created (Expenses, Receipts, Users v1).
-
-
----
-
-## Changelog
 
 | Date       | Version | Description                                    | Author           |
 |------------|---------|------------------------------------------------|------------------|
