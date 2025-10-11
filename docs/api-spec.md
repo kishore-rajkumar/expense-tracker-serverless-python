@@ -32,7 +32,9 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 | Expense  | expenseId, userId, amount, category, date, description | belongsTo: User; hasMany: Receipts  |
 | Receipt  | receiptId, expenseId, fileUrl, uploadedAt              | belongsTo: Expense                  |
 
-<img width="2400" height="897" alt="image" src="https://github.com/user-attachments/assets/d02df983-86ed-4b95-b682-5f7454227e22" />
+
+<br/>
+<img width="1089" height="257" alt="image" src="https://github.com/user-attachments/assets/7678e615-a2c1-48df-8943-72924fc88bcc" />
 
 ---
 
