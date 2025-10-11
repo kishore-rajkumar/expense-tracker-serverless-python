@@ -227,13 +227,85 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 All endpoints return errors in the following format:
 ```
 {
-"status": "error",
-"error": {
-"code": "EXPENSE_NOT_FOUND",
-"message": "Expense not found."
+  "status": "error",
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error description."
+  }
 }
+
+```
+#### Fields:
+- **status:** Always "error" for error responses.
+- **error.code:** Machine-friendly string for identifying the error type.
+- **error.message:** Description to be shown or logged, user- and developer-friendly.
+
+### Example Error Responses
+
+**Validation Error (400)**
+```
+{
+  "status": "error",
+  "error": {
+    "code": "VALIDATION_FAILED",
+    "message": "Amount must be a positive number."
+  }
 }
 ```
+
+**Resource Not Found (404)**
+```
+{
+  "status": "error",
+  "error": {
+    "code": "EXPENSE_NOT_FOUND",
+    "message": "No expense found with the given ID."
+  }
+}
+```
+**Unauthorized (401)**
+```
+{
+  "status": "error",
+  "error": {
+    "code": "AUTH_REQUIRED",
+    "message": "Authentication is required for this endpoint."
+  }
+}
+```
+
+**Forbidden (403)**
+```
+{
+  "status": "error",
+  "error": {
+    "code": "ACCESS_DENIED",
+    "message": "You do not have permission to update this resource."
+  }
+}
+```
+
+**Internal Server Error (500)**
+```
+{
+  "status": "error",
+  "error": {
+    "code": "INTERNAL_ERROR",
+    "message": "An unexpected server error occurred. Please try again later."
+  }
+}
+```
+
+### Error Code Reference
+- VALIDATION_FAILED
+- EXPENSE_NOT_FOUND
+- RECEIPT_NOT_FOUND
+- USER_NOT_FOUND
+- AUTH_REQUIRED
+- ACCESS_DENIED
+- INTERNAL_ERROR
+
+_Clients should always check for the **"status": "error"** property and handle display or retries accordingly._
 
 ---
 
