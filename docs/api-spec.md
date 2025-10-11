@@ -36,7 +36,7 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 <br/>
 <img width="1089" height="257" alt="image" src="https://github.com/user-attachments/assets/7678e615-a2c1-48df-8943-72924fc88bcc" />
 
----
+
 
 ## API Endpoints
 
@@ -123,7 +123,7 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
   "status": "deleted"
 }
 `
----
+
 
 ### 2. Receipts
 
@@ -168,7 +168,6 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 }
 `
 
----
 
 ### 3. Users
 
@@ -221,7 +220,7 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 }
 `
 
----
+
 
 ## Error Handling
 All endpoints return errors in the following format:
@@ -307,7 +306,7 @@ All endpoints return errors in the following format:
 
 _Clients should always check for the **"status": "error"** property and handle display or retries accordingly._
 
----
+
 
 ## Example Requests/Responses
 
@@ -400,7 +399,7 @@ _Clients should always check for the **"status": "error"** property and handle d
 }
 ```
 
----
+
 
 ## Changelog
 
