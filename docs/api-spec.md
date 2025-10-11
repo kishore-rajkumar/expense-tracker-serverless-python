@@ -173,13 +173,53 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 ### 3. Users
 
 #### POST /users/register
-- Registers a new user (for admin/manual onboarding).
+- **Description:** Registers a new user account. (For manual onboarding, admin flows, or extension beyond Cognito)
+- **Auth:** Not required for registration
+- **Request Schema:**
+`
+{
+  "name": "Kishore Rajkumar",
+  "email": "kishore@example.com",
+  "password": "userpassword123"
+}
+`
+- **Response Schema:**
+`
+{
+  "userId": "u123",
+  "status": "registered"
+}
+`
 
 #### GET /users/{userId}
-- Retrieves profile data.
-
+- **Description:** Retrieves user profile details by ID.
+- **Auth:** Required (Cognito JWT)
+- **Response Schema:**
+`
+{
+  "userId": "u123",
+  "name": "Kishore Rajkumar",
+  "email": "kishore@example.com",
+  "registrationDate": "2025-10-11T12:00:00Z"
+}
+`
 #### PUT /users/{userId}
-- Updates user profile.
+- **Description:** Updates user profile information.
+- **Auth:** Required
+- **Request Schema:**
+`
+{
+  "name": "Kishore R.",
+  "email": "newmail@example.com"
+}
+`
+- **Response Schema:**
+`
+{
+  "userId": "u123",
+  "status": "updated"
+}
+`
 
 ---
 
