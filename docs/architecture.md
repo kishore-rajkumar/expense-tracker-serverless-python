@@ -1,62 +1,62 @@
-# Architecture Overview
+# AWS Serverless Architecture for Expense Tracker Application
 
-## High-Level Diagram
+## Architecture Diagram
 
 ![Serverless Architecture Diagram](architecture.png)
 
-*Place the diagram image `architecture.png` in the same folder as this file or update the path accordingly.*
+---
+
+## Architecture Overview
+
+This diagram illustrates the AWS serverless architecture designed for a scalable and secure expense tracking application.
+
+### Components and Data Flow:
+
+- **Clients (Web/Mobile App):**
+  - Users initiate requests such as adding expenses or uploading receipts.
+  - They interact with the app interface which communicates via HTTP requests.
+
+- **API Gateway:**
+  - Acts as the front-door for all incoming requests.
+  - Routes requests to appropriate Lambda functions after performing validation and throttling.
+  - Manages API-level security, rate limiting, and request shaping.
+
+- **AWS Cognito (Authentication & Authorization):**
+  - Handles user sign-up, login, and token management.
+  - Verifies user identity and issues JWT tokens for secure access.
+  - Ensures only authenticated users can access protected resources.
+
+- **AWS Lambda (Business Logic):**
+  - Executes core application logic, such as CRUD operations on expenses.
+  - Processes receipt uploads and metadata management.
+  - Interacts with DynamoDB and S3 to store and retrieve data.
+
+- **Amazon DynamoDB (Data Storage):**
+  - Stores expense records, user profiles, and metadata.
+  - A fast, scalable NoSQL database optimized for serverless apps.
+
+- **Amazon S3 (File Storage):**
+  - Stores receipt images and documents.
+  - Receipts are uploaded here and referenced via URLs stored in DynamoDB.
+
+- **Amazon CloudWatch (Monitoring & Logging):**
+  - Collects logs from Lambda and API Gateway.
+  - Provides metrics, dashboards, and alerts to monitor system health and troubleshoot issues.
 
 ---
 
-## System Summary
+## Summary
 
-This document describes the architecture of a scalable, secure AWS serverless expense tracker application built with best practices.
-
-- Authentication is handled by **AWS Cognito** for user management and secure access.
-- API requests from clients go through **API Gateway**, which routes to backend compute.
-- **AWS Lambda** functions in Python execute business logic such as expense CRUD and receipt processing.
-- Data is stored in **Amazon DynamoDB**, a highly available NoSQL database.
-- Receipts and other files are stored securely in **Amazon S3**.
-- Complex workflows like expense approval are modeled and managed using **AWS Step Functions**.
-- Monitoring and logging are managed through **Amazon CloudWatch** (not shown in diagram).
-
----
-
-## Key Components
-
-| Component       | Purpose                                       |
-|-----------------|-----------------------------------------------|
-| Cognito         | User authentication and authorization         |
-| API Gateway     | Exposes RESTful API endpoints                  |
-| Lambda          | Executes business logic in a serverless setup |
-| DynamoDB        | Stores expense and user data                    |
-| S3              | Holds receipt images and uploaded documents    |
-| Step Functions  | Orchestrates expense approval workflows        |
-
----
-
-## Architectural Flow
-
-1. User logs in/signs up via Cognito.
-2. Client apps call API Gateway endpoints.
-3. API Gateway authorizes requests using Cognito tokens.
-4. Lambda functions process requests and interact with DynamoDB and S3.
-5. Step Functions manage multi-step workflows like approvals.
-6. CloudWatch collects logs and metrics for observability.
+This architecture ensures a highly scalable, cost-efficient, and secure expense tracking system, leveraging AWS serverless services to reduce operational overhead, enhance performance, and facilitate future growth.
 
 ---
 
 ## Next Steps
 
-- Add this diagram and architecture documentation to the project repository.
-- Implement component integration based on this architecture.
-- Define IAM roles and security policies following the principle of least privilege.
-- Setup CI/CD pipelines for automated deployments.
-- Develop unit and integration tests to ensure reliability.
-
----
-
-This architecture provides a robust, cost-effective foundation for building and scaling your AWS serverless expense tracker application.
+- Configure IAM roles and policies for secure access.
+- Implement the Lambda functions and API routes.
+- Set up Cognito user pools and identity management.
+- Connect all components and test end-to-end workflows.
 
 ---
 
