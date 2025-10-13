@@ -45,6 +45,43 @@ This diagram illustrates the AWS serverless architecture designed for a scalable
 
 ---
 
+## Project Folder Structure
+
+This section describes the recommended organization for the AWS serverless expense tracker application:
+```
+expense-tracker-serverless-python/
+├── docs/
+│ ├── architecture.md # AWS architecture and system overview
+│ ├── architecture.png # Architecture diagram image
+│ ├── user-guide.md # End user instructions
+│ └── api-reference.md # API endpoint documentation
+├── src/
+│ ├── expenses/ # Lambda for expense CRUD operations
+│ ├── receipts/ # Lambda for receipt uploads
+│ ├── approval/ # Lambda for approval workflow
+│ └── common/ # Shared utilities
+├── workflows/
+│ └── expenseApproval.asl.json # Step Functions workflow definition (ASL)
+├── infrastructure/
+│ ├── template.yaml # AWS SAM/CloudFormation template
+│ └── dynamodb-table.yaml # DynamoDB setup/configuration
+├── tests/
+│ ├── expenses/ # Tests for expenses Lambda
+│ ├── receipts/ # Tests for receipts Lambda
+│ ├── approval/ # Tests for approval Lambdas
+│ └── common/ # Tests for utilities
+├── .github/
+│ └── workflows/
+│ └── ci-cd.yaml # CI/CD pipeline automation
+├── README.md # Project summary and main instructions
+├── requirements.txt / package.json # Project dependencies
+└── .env.example # Sample environment variables
+```
+
+This structure separates source code, infrastructure as code, workflows, documentation, and tests for clarity, maintainability, and easy team collaboration.
+
+---
+
 ## Summary
 
 This architecture ensures a highly scalable, cost-efficient, and secure expense tracking system, leveraging AWS serverless services to reduce operational overhead, enhance performance, and facilitate future growth.
