@@ -51,13 +51,4 @@ This architecture ensures a highly scalable, cost-efficient, and secure expense 
 
 ---
 
-## Next Steps
-
-- Configure IAM roles and policies for secure access.
-- Implement the Lambda functions and API routes.
-- Set up Cognito user pools and identity management.
-- Connect all components and test end-to-end workflows.
-
----
-
 Feel free to request additional documentation sections or further simplifications as needed.
