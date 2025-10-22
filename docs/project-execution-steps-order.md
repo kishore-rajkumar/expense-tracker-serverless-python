@@ -20,14 +20,20 @@
 - Specify fine-grained IAM roles/policies for all actors/services.
 - Prevents security issues and aligns with least-privilege best practices.
 
-# 6. Document Coding/Testing/Review Standards
+## 6. Set up CI/CD Pipeline
+- Configure GitHub Actions or AWS CodePipeline
+- Automate build, test, and deployment workflows
+- Set up staging and production environments
+- Configure automated testing in pipeline
+
+# 7. Document Coding/Testing/Review Standards
 - Set up guidelines for code style, branching, PR reviews, and mandatory tests.
 - Ensures consistent, high-quality code and easier collaboration.
 
-## 7. Implement Authentication & Core CRUD Flows First
+## 8. Implement Authentication & Core CRUD Flows First
 - Develop and test the registration/login flows and basic expense CRUD.
 - Prove out the core business logic and integration points.
 
-## 8. Integrate Monitoring, Logging, and Error Handling
+## 9. Integrate Monitoring, Logging, and Error Handling
 - Add CloudWatch integration, per-request logging, and error tracing.
 - This provides observability and reliability from the start.
