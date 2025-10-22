@@ -26,7 +26,7 @@
 - Set up staging and production environments
 - Configure automated testing in pipeline
 
-# 7. Document Coding/Testing/Review Standards
+## 7. Document Coding/Testing/Review Standards
 - Set up guidelines for code style, branching, PR reviews, and mandatory tests.
 - Ensures consistent, high-quality code and easier collaboration.
 
