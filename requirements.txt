@@ -1,0 +1,4 @@
+aws-sam-cli
+flake8
+pytest
+# ...other project dependencies
