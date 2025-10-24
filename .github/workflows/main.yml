@@ -1,4 +1,4 @@
-name: Build & Deploy SAM Application
+name: CICD
 
 on:
   push:
