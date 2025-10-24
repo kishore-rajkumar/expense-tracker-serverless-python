@@ -1,6 +1,6 @@
 # Expense Tracker Serverless Python
 
-![CI](https://github.com/kishore-rajkumar/expense-tracker-serverless-python/actions/workflows/deploy.yml/badge.svg)
+![CI](https://github.com/kishore-rajkumar/expense-tracker-serverless-python/actions/workflows/main.yml/badge.svg)
 ![License](https://img.shields.io/github/license/kishore-rajkumar/expense-tracker-serverless-python)
 ![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)
 ![AWS](https://img.shields.io/badge/AWS-serverless-yellow?logo=amazon-aws)
