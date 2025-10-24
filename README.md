@@ -1,5 +1,11 @@
 # Expense Tracker Serverless Python
 
+![CI](https://github.com/kishore-rajkumar/expense-tracker-serverless-python/actions/workflows/deploy.yml/badge.svg)
+![License](https://img.shields.io/github/license/kishore-rajkumar/expense-tracker-serverless-python)
+![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)
+![AWS](https://img.shields.io/badge/AWS-serverless-yellow?logo=amazon-aws)
+![Issues](https://img.shields.io/github/issues/kishore-rajkumar/expense-tracker-serverless-python)
+
 A serverless expense tracking solution built using Python and AWS. Key services: Cognito (auth), DynamoDB, S3, Lambda, API Gateway. Features modular architecture, Infrastructure-as-Code, and automated CI/CD for reliability and scalability.
 
 ---
