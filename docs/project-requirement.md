@@ -103,18 +103,7 @@
 
 ---
 
-## 10. Next Steps
-
-1. **Refine User Stories:** Start with registration, add/view expense, upload receipt.
-2. **Define Data Models:** Expense entity, receipt object, user profile.
-3. **Design Basic IAM Policies:** Draft for Lambda/API/S3/DynamoDB integration.
-4. **Feature Roadmap:** Clearly state what’s in scope for MVP and what’s “showcase only.”
-5. **Architecture Diagram:** Visual map for README and onboarding.
-6. **Project Documentation:** Set standards for writing code, tests, and usage guides from day one.
-
----
-
-## 11. Out of Scope for MVP
+## 10. Out of Scope for MVP
 
 - Advanced analytics/reporting dashboards beyond monthly summary.
 - Multi-tenancy or complex RBAC.
@@ -123,7 +112,7 @@
 
 ---
 
-## 12. Deliverables
+## 11. Deliverables
 
 - Source code repository (Python backend, frontend, infrastructure-as-code).
 - Deployment scripts and documentation.
