@@ -14,23 +14,25 @@ Deliver a fully functional authentication backend with endpoints for signup, log
 **Epic:** Authentication and User Management
 
 **Linked Issues:**
-- Setup Cognito User Pool and Identity Pool
-- Implement Signup Lambda
-- Implement Login Lambda
-- Create Auth API Gateway Integration
-- Test Authentication Flow Locally
-- Configure IAM Roles and Policies for secure access
+- Setup AWS Cognito User Pool and Identity Pool for Authentication
+- Implement Registration API for User Sign-Up
+  - Implement Signup Lambda
+- Implement Login API for User Authentication
+  - Implement Login Lambda
+- Create Auth API Gateway Integration   
+- Configure Cognito IAM Role Policies for Secure Access Control
+- Test Authentication Flow for Registration and Login APIs
 
 ## Sprint Backlog
 
 Issue  |  Task                                       |  Owner              |  Status  |  Priority
 -------|---------------------------------------------|---------------------|----------|----------
-#1     |  Setup Cognito User Pool and Identity Pool  |  @kishore-rajkumar  |  To Do   |  High    
-#2     |  Implement Signup Lambda                    |  @kishore-rajkumar  |  To Do   |  High    
-#3     |  Implement Login Lambda                     |  @kishore-rajkumar  |  To Do   |  Medium  
-#4     |  Create Auth API Gateway Integration        |  @kishore-rajkumar  |  To Do   |  Medium  
-#5     |  Test Authentication Flow Locally           |  @kishore-rajkumar  |  To Do   |  High    
-#6     |  Configure IAM Roles and Policies           |  @kishore-rajkumar  |  To Do   |  High    
+#2     |  Setup AWS Cognito User Pool and Identity Pool for Authentication |  @kishore-rajkumar  |  To Do   |  High    
+#3     |  Implement Registration API for User Sign-Up                    |  @kishore-rajkumar  |  To Do   |  High    
+#4     |  Implement Login API for User Authentication                    |  @kishore-rajkumar  |  To Do   |  Medium  
+#48     |  Create Auth API Gateway Integration        |  @kishore-rajkumar  |  To Do   |  Medium  
+#5     |  Configure Cognito IAM Role Policies for Secure Access Control          |  @kishore-rajkumar  |  To Do   |  High    
+#6     |  Test Authentication Flow for Registration and Login APIs          |  @kishore-rajkumar  |  To Do   |  High    
 
 
 ## Definition of Done (DoD)
