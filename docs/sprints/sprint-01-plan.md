@@ -9,6 +9,23 @@
 ### Sprint Goal
 Deliver a fully functional authentication backend with endpoints for signup, login, and token-based identity validation using AWS Cognito integrated with API Gateway and Lambda.
 
+## Sprint 01: Dates and Time Estimate
+
+- **Sprint Duration:** October 30, 2025 – November 13, 2025 (2 weeks)
+- **Total Estimated Effort:** **8 days** / **64 hours**
+- **Estimated Effort per Task:**
+
+    | Issue | Task                                          | Days | Hours |
+    |-------|-----------------------------------------------|------|-------|
+    | #2    | Setup AWS Cognito User Pool and Identity Pool | 1.5  | 12    |
+    | #3    | Implement Registration API for User Sign-Up   | 1.5  | 12    |
+    | #4    | Implement Login API for User Authentication   | 1    | 8     |
+    | #48   | Create Auth API Gateway Integration           | 1    | 8     |
+    | #5    | Configure Cognito IAM Role Policies           | 1    | 8     |
+    | #6    | Test Authentication Flow                      | 1    | 8     |
+    | —     | Buffer (troubleshooting, blockers)            | 1    | 8     |
+
+
 ## Epics and Issues
 
 **Epic:** Authentication and User Management
