@@ -24,6 +24,10 @@ Resources:
           AttributeDataType: String
           Required: true
           Mutable: false
+        - Name: name
+          AttributeDataType: String
+          Required: true
+          Mutable: false
   
   ExpenseTrackerCognitoDomain:
     Type: AWS::Cognito::UserPoolDomain
@@ -70,8 +74,91 @@ Resources:
     Properties:
       GroupName: user
       UserPoolId: !Ref ExpenseTrackerUserPool
+
+  # Api Gateway
+  ExpenseTrackerApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt ExpenseTrackerUserPool.Arn
+            Identity:
+              Header: Authorization
+              ValidationExpression: '^Bearer [-0-9a-zA-Z\\.]*$'
+
+  
+  # DynamoDB Table
+  ExpensesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ExpensesTable
+      AttributeDefinitions:
+        - AttributeName: expense_id
+          AttributeType: S
+        - AttributeName: user_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+        - AttributeName: expense_id
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+  # Lambda Function: Expenses CRUD
+  ExpensesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # CodeUri: ../src/                  # temporarily disabled
+      Handler: expenses.lambda_handler
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ExpensesTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ExpensesTable
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${AWS::StackName}-ExpensesFunction:*'
+      Events:
+        GetExpenses:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ExpenseTrackerApi
+            Path: /expenses
+            Method: GET
+        CreateExpense:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ExpenseTrackerApi
+            Path: /expenses
+            Method: POST
+        UpdateExpense:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ExpenseTrackerApi
+            Path: /expenses/{id}
+            Method: PUT
+        DeleteExpense:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ExpenseTrackerApi
+            Path: /expenses/{id}
+            Method: DELETE
   
 Outputs:
+
+  ApiUrl:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ExpenseTrackerApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
   
   UserPoolId:
     Description: "Cognito User Pool ID"
