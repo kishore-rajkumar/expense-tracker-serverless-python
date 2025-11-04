@@ -120,6 +120,79 @@ We welcome your contributions!
 
 ---
 
+## Cognito User Pool Setup
+
+This project uses AWS Cognito User Pool for user authentication, user attribute management, and role-based access control, configured via AWS SAM as Infrastructure as Code.
+
+### User Pool Configuration
+
+- **User Pool Name:** `ExpenseTrackerUserPool`
+- **Attributes Enabled:**
+  - Email (auto-verified, required, immutable)
+  - Username (using email as username)
+  - Custom attribute: `name` (required, immutable)
+- **Verification:** Email addresses are auto-verified
+
+### User Pool Client Configuration
+
+- **Client Name:** `ExpenseTrackerClient`
+- **Authentication Flows Enabled:**
+  - ALLOW_USER_PASSWORD_AUTH
+  - ALLOW_REFRESH_TOKEN_AUTH
+  - ALLOW_USER_SRP_AUTH
+- **OAuth Flows Enabled:**
+  - Authorization Code Grant (`code`)
+  - Implicit Grant (`implicit`)
+- **OAuth Scopes:**
+  - `email`
+  - `openid`
+  - `profile`
+- **Identity Providers:** Cognito only
+- **Callback URLs:** Configured to your deployed frontend URL (replace with actual domain)
+- **Logout URLs:** Configured similarly for proper sign-out handling
+
+### User Groups for Role Management
+
+- `admin`
+- `user`
+
+Assign users to these groups to manage permissions and access levels within the app.
+
+### API Gateway Integration
+
+- API Gateway is configured with a Cognito User Pool Authorizer as the default authorizer.
+- The authorizer validates JWT tokens sent in the `Authorization` header following bearer token format.
+- This setup restricts API access to authenticated users in the Cognito User Pool.
+- Access control can be enforced based on user groups defined in the pool.
+
+### Environment Variables for Deployment
+
+Ensure these variables are configured correctly in your deployment environment:
+
+- `COGNITO_USER_POOL_ID`: The Cognito User Pool ID (`ExpenseTrackerUserPool`)
+- `COGNITO_APP_CLIENT_ID`: The User Pool Client ID (`ExpenseTrackerClient`)
+- `AWS_REGION`: AWS region where resources are deployed
+
+### SAM Outputs
+
+After deployment using SAM, the following outputs are available:
+
+- API Gateway URL for production stage endpoint
+- Cognito User Pool ID and Client ID for integration
+- Cognito Hosted UI URL for user sign-in and authentication flows
+
+### Testing and Maintenance
+
+- Use sample users assigned to groups (`admin`, `user`) to test authentication and role-based access.
+- Update SAM templates to adjust user pool configurations or group roles as needed.
+- Follow least privilege and security best practices, including use of MFA and secure token handling.
+
+
+
+This documentation provides a clear guide for anyone contributing to or operating the expense tracker project on how authentication and authorization is configured via Cognito User Pools and integrated with API Gateway.
+
+---
+
 ## Troubleshooting
 
 - CI/CD workflow or setup issues?  
