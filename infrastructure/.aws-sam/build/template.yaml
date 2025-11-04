@@ -1,46 +1,78 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Expense Tracker Serverless Application - SAM Baseline
+Description: Expense Tracker Serverless Application
 Globals:
   Function:
-    Timeout: 10
+    Timeout: 30
+    MemorySize: 512
     Runtime: python3.12
-    MemorySize: 128
-    Environment:
-      Variables:
-        TABLE_NAME:
-          Ref: ExpensesTable
 Resources:
-  ExpensesTable:
-    Type: AWS::DynamoDB::Table
+  ExpenseTrackerUserPool:
+    Type: AWS::Cognito::UserPool
     Properties:
-      TableName: Expenses
-      AttributeDefinitions:
-      - AttributeName: ExpenseId
-        AttributeType: S
-      KeySchema:
-      - AttributeName: ExpenseId
-        KeyType: HASH
-      BillingMode: PAY_PER_REQUEST
-  ExpenseFunction:
-    Type: AWS::Serverless::Function
+      UserPoolName: ExpenseTrackerUserPool
+      AutoVerifiedAttributes:
+      - email
+      UsernameAttributes:
+      - email
+      Schema:
+      - Name: email
+        AttributeDataType: String
+        Required: true
+        Mutable: false
+  ExpenseTrackerCognitoDomain:
+    Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Handler: src/expenses/lambda_handler
-      CodeUri: ExpenseFunction
-      Policies:
-      - DynamoDBCrudPolicy:
-          TableName:
-            Ref: ExpensesTable
-      Events:
-        ExpenseApi:
-          Type: Api
-          Properties:
-            Path: /expenses
-            Method: any
-    Metadata:
-      SamResourceId: ExpenseFunction
+      Domain: expense-tracker-domain
+      UserPoolId:
+        Ref: ExpenseTrackerUserPool
+  ExpenseTrackerUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: ExpenseTrackerClient
+      UserPoolId:
+        Ref: ExpenseTrackerUserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+      - ALLOW_USER_PASSWORD_AUTH
+      - ALLOW_REFRESH_TOKEN_AUTH
+      - ALLOW_USER_SRP_AUTH
+      AllowedOAuthFlows:
+      - code
+      - implicit
+      AllowedOAuthScopes:
+      - email
+      - openid
+      - profile
+      AllowedOAuthFlowsUserPoolClient: true
+      SupportedIdentityProviders:
+      - COGNITO
+      CallbackURLs:
+      - https://d84l1y8p4kdic.cloudfront.net
+      LogoutURLs:
+      - https://d84l1y8p4kdic.cloudfront.net
+  ExpenseTrackerUserPoolAdminGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: admin
+      UserPoolId:
+        Ref: ExpenseTrackerUserPool
+  ExpenseTrackerUserPoolUserGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: user
+      UserPoolId:
+        Ref: ExpenseTrackerUserPool
 Outputs:
-  ExpenseApiUrl:
-    Description: API Gateway endpoint URL
+  UserPoolId:
+    Description: Cognito User Pool ID
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/expenses
+      Ref: ExpenseTrackerUserPool
+  UserPoolClientId:
+    Description: Cognito User Pool Client ID
+    Value:
+      Ref: ExpenseTrackerUserPoolClient
+  CognitoHostedUI:
+    Description: Cognito Hosted UI URL
+    Value:
+      Fn::Sub: https://${ExpenseTrackerCognitoDomain}.auth.${AWS::Region}.amazoncognito.com/login?client_id=${ExpenseTrackerUserPoolClient}&response_type=code&scope=email+openid+profile&redirect_uri=https://localhost:3000/callback
