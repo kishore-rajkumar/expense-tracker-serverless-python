@@ -1,4 +1,8 @@
 aws-sam-cli
 flake8
 pytest
-# ...other project dependencies
+
+moto
+boto3
+
+# ...other project dependencies with pinned versions
