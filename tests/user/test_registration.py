@@ -35,3 +35,17 @@ def test_invalid_email():
     response = lambda_handler(event, None)
     assert response['statusCode'] == 400
     assert "Invalid or missing email" in response['body']
+
+
+def test_invalid_password():
+    event = {
+        "body": json.dumps({
+            "email": "test@example.com",
+            "password": "short",
+            "name": "Test User"
+        })
+    }
+    response = lambda_handler(event, None)
+    assert response['statusCode'] == 400
+    assert "Password does not meet criteria" in response['body']
+
