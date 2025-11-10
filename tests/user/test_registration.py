@@ -1,6 +1,7 @@
 import json
-import pytest
+# import pytest
 from user.registration import lambda_handler  # Import the function to be tested
+
 
 def test_successful_registration(monkeypatch):
     # Prepare a fake event with valid registration data
@@ -21,3 +22,15 @@ def test_successful_registration(monkeypatch):
     assert response['statusCode'] == 201
     body = json.loads(response['body'])
     assert "User registered successfully" in body['message']
+
+def test_invalid_email():
+    event = {
+        "body": json.dumps({
+            "email": "invalid-email",
+            "password": "validPassword123",
+            "name": "Test User"
+        })
+    }
+    response = lambda_handler(event, None)
+    assert response['statusCode'] == 400
+    assert "Invalid or missing email" in response['body']
