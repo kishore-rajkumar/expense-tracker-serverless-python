@@ -23,6 +23,7 @@ def test_successful_registration(monkeypatch):
     body = json.loads(response['body'])
     assert "User registered successfully" in body['message']
 
+
 def test_invalid_email():
     event = {
         "body": json.dumps({

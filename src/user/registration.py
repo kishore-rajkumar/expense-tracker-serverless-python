@@ -57,4 +57,3 @@ def response(status_code, body):
         'body': json.dumps(body),
         'headers': {'Content-Type': 'application/json'}
     }
-    
