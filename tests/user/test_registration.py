@@ -48,4 +48,3 @@ def test_invalid_password():
     response = lambda_handler(event, None)
     assert response['statusCode'] == 400
     assert "Password does not meet criteria" in response['body']
-
