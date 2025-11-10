@@ -16,6 +16,19 @@ def validate_email(email):
     return re.match(pattern, email) is not None
 
 
+def validate_password(password):
+    """
+    Validate the password format.
+
+    Args:
+        password (str): The password to validate.
+
+    Returns:
+        bool: True if password criteria is met, False otherwise.
+    """
+    return password is not None and len(password) >= 8
+
+
 def lambda_handler(event, context):
     """
     AWS Lambda handler function to process user registration.
@@ -31,10 +44,15 @@ def lambda_handler(event, context):
     # Parse JSON body safely from event
     body = json.loads(event.get('body') or '{}')
     email = body.get('email')
+    password = body.get('password')
 
     # Validate email presence and format
     if not email or not validate_email(email):
         return response(400, {'message': 'Invalid or missing email.'})
+
+    # Validate password criteria
+    if not validate_password(password):
+        return response(400, {'message': 'Password does not meet criteria.'})
 
     # Return success response
     return response(201, {"message": "User registered successfully"})
