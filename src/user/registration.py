@@ -35,9 +35,10 @@ def lambda_handler(event, context):
     # Validate email presence and format
     if not email or not validate_email(email):
         return response(400, {'message': 'Invalid or missing email.'})
-    
+
     # Return success response
-    return response(201,{"message": "User registered successfully"})
+    return response(201, {"message": "User registered successfully"})
+
 
 def response(status_code, body):
     """
@@ -50,9 +51,10 @@ def response(status_code, body):
     Returns:
         dict: Formatted response with status code, JSON body, and headers.
     """
-    
+
     return {
         'statusCode': status_code,
         'body': json.dumps(body),
         'headers': {'Content-Type': 'application/json'}
     }
+    
