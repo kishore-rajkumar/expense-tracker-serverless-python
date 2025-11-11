@@ -45,6 +45,7 @@ def lambda_handler(event, context):
     body = json.loads(event.get('body') or '{}')
     email = body.get('email')
     password = body.get('password')
+    name = body.get('name')
 
     # Validate email presence and format
     if not email or not validate_email(email):
@@ -53,8 +54,12 @@ def lambda_handler(event, context):
     # Validate password criteria
     if not validate_password(password):
         return response(400, {'message': 'Password does not meet criteria.'})
+    
+    # Validate name presence
+    if not name:
+        return response(400,{'message': 'Name is required.'})
 
-    # Return success response
+    # Return success response for now
     return response(201, {"message": "User registered successfully"})
 
 
