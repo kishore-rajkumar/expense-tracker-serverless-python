@@ -68,7 +68,7 @@ def test_username_exists_exception(monkeypatch):
         # Set up the mock Cognito client's exceptions attribute with
         # our custom UsernameExistsException class.
         mock_cognito.exceptions = type('Exceptions', (), {'UsernameExistsException': MockUsernameExistsException})()
- 
+
         # Set the sign_up method to raise the UsernameExistsException
         # when called, simulating an existing user error from Cognito.
         mock_cognito.sign_up.side_effect = mock_cognito.exceptions.UsernameExistsException("User already exists")
