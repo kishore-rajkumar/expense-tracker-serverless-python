@@ -77,6 +77,8 @@ def lambda_handler(event, context):
                {'Name': 'name', 'Value': name}
             ]
         )
+    except cognito_client.exceptions.UsernameExistsException:
+        return response(409, {'message': 'User already exists.'})
     except Exception as e:
         return response(500, {'message': 'Cognito SignUp failed', 'error': str(e)})
 
