@@ -54,10 +54,10 @@ def lambda_handler(event, context):
     # Validate password criteria
     if not validate_password(password):
         return response(400, {'message': 'Password does not meet criteria.'})
-    
+
     # Validate name presence
     if not name:
-        return response(400,{'message': 'Name is required.'})
+        return response(400, {'message': 'Name is required.'})
 
     # Return success response for now
     return response(201, {"message": "User registered successfully"})
