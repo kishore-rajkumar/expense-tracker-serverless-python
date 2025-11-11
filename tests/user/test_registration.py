@@ -49,6 +49,7 @@ def test_invalid_password():
     assert response['statusCode'] == 400
     assert "Password does not meet criteria" in response['body']
 
+
 def test_missing_name():
     event = {
         "body": json.dumps({
