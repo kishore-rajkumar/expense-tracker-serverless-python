@@ -4,7 +4,7 @@ from unittest.mock import patch
 from user.registration import lambda_handler  # Import the function to be tested
 
 
-# Define a custom exception class to simulate 
+# Define a custom exception class to simulate
 # the AWS Cognito UsernameExistsException.
 # It inherits from Python's base Exception class
 # to be usable in try-except blocks.
@@ -68,7 +68,7 @@ def test_username_exists_exception(monkeypatch):
         # Set up the mock Cognito client's exceptions attribute with
         # our custom UsernameExistsException class.
         mock_cognito.exceptions = type('Exceptions', (), {'UsernameExistsException': MockUsernameExistsException})()
-        
+ 
         # Set the sign_up method to raise the UsernameExistsException
         # when called, simulating an existing user error from Cognito.
         mock_cognito.sign_up.side_effect = mock_cognito.exceptions.UsernameExistsException("User already exists")
