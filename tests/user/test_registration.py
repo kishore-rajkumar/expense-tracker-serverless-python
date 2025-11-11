@@ -48,3 +48,15 @@ def test_invalid_password():
     response = lambda_handler(event, None)
     assert response['statusCode'] == 400
     assert "Password does not meet criteria" in response['body']
+
+def test_missing_name():
+    event = {
+        "body": json.dumps({
+            "email": "test@example.com",
+            "password": "validPassword123"
+            # name is missing
+        })
+    }
+    response = lambda_handler(event, None)
+    assert response['statusCode'] == 400
+    assert "Name is required" in response['body']
