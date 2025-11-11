@@ -23,7 +23,7 @@ def test_successful_registration(monkeypatch):
         mock_cognito = mock_client.return_value
         mock_cognito.sign_up.return_value = {"UserConfirmed": False}
         response = lambda_handler(event, None)
-        
+
         # Assert sign_up was actually called
         mock_cognito.sign_up.assert_called_once_with(
             ClientId='test-client-id',
