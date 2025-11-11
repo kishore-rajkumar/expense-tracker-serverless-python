@@ -1,5 +1,7 @@
 import json
 import re
+import os
+import boto3
 
 
 def validate_email(email):
@@ -58,6 +60,25 @@ def lambda_handler(event, context):
     # Validate name presence
     if not name:
         return response(400, {'message': 'Name is required.'})
+
+    # Get environment values for Cognito
+    # USER_POOL_ID = os.environ.get('USER_POOL_ID')
+    CLIENT_ID = os.environ.get('CLIENT_ID')
+    cognito_client = boto3.client('cognito-idp')
+
+    # Cognito signup
+    try:
+        cognito_client.sign_up(
+            ClientId=CLIENT_ID,
+            Username=email,
+            Password=password,
+            UserAttributes=[
+               {'Name': 'email', 'Value': email},
+               {'Name': 'name', 'Value': name}
+            ]
+        )
+    except Exception as e:
+        return response(500, {'message': 'Cognito SignUp failed', 'error': str(e)})
 
     # Return success response for now
     return response(201, {"message": "User registered successfully"})

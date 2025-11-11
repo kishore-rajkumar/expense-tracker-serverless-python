@@ -1,4 +1,5 @@
 import json
+from unittest.mock import patch
 # import pytest
 from user.registration import lambda_handler  # Import the function to be tested
 
@@ -13,15 +14,31 @@ def test_successful_registration(monkeypatch):
         })
     }
 
-    # Mock boto3 client and sign_up call here (to be implemented)
-    # For now, just check structure of response
+    # Set up environment variables as in Lambda
+    monkeypatch.setenv('USER_POOL_ID', 'test-pool-id')
+    monkeypatch.setenv('CLIENT_ID', 'test-client-id')
 
-    response = lambda_handler(event, None)
+    # Patch boto3 client and sign_up method
+    with patch('boto3.client') as mock_client:
+        mock_cognito = mock_client.return_value
+        mock_cognito.sign_up.return_value = {"UserConfirmed": False}
+        response = lambda_handler(event, None)
+        
+        # Assert sign_up was actually called
+        mock_cognito.sign_up.assert_called_once_with(
+            ClientId='test-client-id',
+            Username='test@example.com',
+            Password='validPassword123',
+            UserAttributes=[
+                {'Name': 'email', 'Value': 'test@example.com'},
+                {'Name': 'name', 'Value': 'Test User'}
+            ]
+        )
 
-    # Expect HTTP 201 Created
-    assert response['statusCode'] == 201
-    body = json.loads(response['body'])
-    assert "User registered successfully" in body['message']
+        # Expect HTTP 201 Created
+        assert response['statusCode'] == 201
+        body = json.loads(response['body'])
+        assert "User registered successfully" in body['message']
 
 
 def test_invalid_email():
