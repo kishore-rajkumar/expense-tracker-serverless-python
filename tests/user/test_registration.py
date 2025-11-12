@@ -13,7 +13,7 @@ class MockUsernameExistsException(Exception):
         super().__init__(*args)
 
 
-def test_successful_registration(monkeypatch):
+def test_signup_successful_registration(monkeypatch):
     # Prepare a fake event with valid registration data
     event = {
         "body": json.dumps({
@@ -50,7 +50,7 @@ def test_successful_registration(monkeypatch):
         assert "User registered successfully" in body['message']
 
 
-def test_username_exists_exception(monkeypatch):
+def test_signup_username_exists_exception(monkeypatch):
     # Prepare a fake event with valid registration data
     event = {
         "body": json.dumps({
