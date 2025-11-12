@@ -50,6 +50,36 @@ def test_signup_successful_registration(monkeypatch):
         assert "User registered successfully" in body['message']
 
 
+def test_admin_create_user_success(monkeypatch):
+    # import json
+    # from unittest.mock import patch
+    event = {
+        "body": json.dumps({
+            "email": "newadminuser@example.com",
+            "password": "ValidPass123",
+            "name": "Admin User"
+        })
+    }
+    monkeypatch.setenv('USER_POOL_ID', 'test-pool-id')
+    monkeypatch.setenv('REGISTRATION_MODE', 'AdminCreateUser')
+
+    with patch('boto3.client') as mock_client:
+        mock_cognito = mock_client.return_value
+        mock_cognito.admin_create_user.return_value = {}
+        mock_cognito.admin_set_user_password.return_value = {}
+
+        # from user.registration import lambda_handler  # Adjust import path
+        response = lambda_handler(event, None)
+
+        # Assert admin_create_user & admin_set_user_password were actually called
+        mock_cognito.admin_create_user.assert_called_once()
+        mock_cognito.admin_set_user_password.assert_called_once()
+
+        assert response['statusCode'] == 201
+        body = json.loads(response['body'])
+        assert "User registered successfully" in body['message']
+
+
 def test_signup_username_exists_exception(monkeypatch):
     # Prepare a fake event with valid registration data
     event = {
