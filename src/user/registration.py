@@ -62,21 +62,39 @@ def lambda_handler(event, context):
         return response(400, {'message': 'Name is required.'})
 
     # Get environment values for Cognito
-    # USER_POOL_ID = os.environ.get('USER_POOL_ID')
+    USER_POOL_ID = os.environ.get('USER_POOL_ID')
     CLIENT_ID = os.environ.get('CLIENT_ID')
     cognito_client = boto3.client('cognito-idp')
+    MODE = os.environ.get('REGISTRATION_MODE', 'SignUp')
 
     # Cognito signup
     try:
-        cognito_client.sign_up(
-            ClientId=CLIENT_ID,
-            Username=email,
-            Password=password,
-            UserAttributes=[
-               {'Name': 'email', 'Value': email},
-               {'Name': 'name', 'Value': name}
-            ]
-        )
+        if MODE == 'AdminCreateUser':
+            cognito_client.admin_create_user(
+                UserPoolId=USER_POOL_ID,
+                Username=email,
+                UserAttributes=[
+                    {'Name': 'email', 'Value': email},
+                    {'Name': 'name', 'Value': name}
+                ],
+                MessageAction='SUPPRESS'
+            )
+            cognito_client.admin_set_user_password(
+                UserPoolId=USER_POOL_ID,
+                Username=email,
+                Password=password,
+                Permanent=True
+            )
+        else:
+            cognito_client.sign_up(
+                ClientId=CLIENT_ID,
+                Username=email,
+                Password=password,
+                UserAttributes=[
+                    {'Name': 'email', 'Value': email},
+                    {'Name': 'name', 'Value': name}
+                ]
+            )    
     except cognito_client.exceptions.UsernameExistsException:
         return response(409, {'message': 'User already exists.'})
     except Exception as e:
