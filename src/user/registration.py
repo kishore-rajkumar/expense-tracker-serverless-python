@@ -94,7 +94,7 @@ def lambda_handler(event, context):
                     {'Name': 'email', 'Value': email},
                     {'Name': 'name', 'Value': name}
                 ]
-            )    
+            )
     except cognito_client.exceptions.UsernameExistsException:
         return response(409, {'message': 'User already exists.'})
     except Exception as e:
