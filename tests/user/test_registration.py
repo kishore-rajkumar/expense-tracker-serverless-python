@@ -50,6 +50,36 @@ def test_signup_successful_registration(monkeypatch):
         assert "User registered successfully" in body['message']
 
 
+def test_signup_username_exists_exception(monkeypatch):
+    # Prepare a fake event with valid registration data
+    event = {
+        "body": json.dumps({
+            "email": "existing@example.com",
+            "password": "validPassword123",
+            "name": "Existing User"
+        })
+    }
+    monkeypatch.setenv('USER_POOL_ID', 'test-pool-id')
+    monkeypatch.setenv('CLIENT_ID', 'test-client-id')
+
+    with patch('boto3.client') as mock_client:
+        mock_cognito = mock_client.return_value
+
+        # Set up the mock Cognito client's exceptions attribute with
+        # our custom UsernameExistsException class.
+        mock_cognito.exceptions = type('Exceptions', (), {'UsernameExistsException': MockUsernameExistsException})()
+
+        # Set the sign_up method to raise the UsernameExistsException
+        # when called, simulating an existing user error from Cognito.
+        mock_cognito.sign_up.side_effect = mock_cognito.exceptions.UsernameExistsException("User already exists")
+
+        response = lambda_handler(event, None)
+
+        assert response['statusCode'] == 409
+        body = json.loads(response['body'])
+        assert "User already exists" in body['message']
+
+
 def test_admin_create_user_success(monkeypatch):
     # import json
     # from unittest.mock import patch
@@ -80,17 +110,17 @@ def test_admin_create_user_success(monkeypatch):
         assert "User registered successfully" in body['message']
 
 
-def test_signup_username_exists_exception(monkeypatch):
-    # Prepare a fake event with valid registration data
+def test_admin_create_user_already_exists_exception(monkeypatch):
+    # Prepare event for admin registration
     event = {
         "body": json.dumps({
-            "email": "existing@example.com",
+            "email": "existingadmin@example.com",
             "password": "validPassword123",
-            "name": "Existing User"
+            "name": "Existing Admin"
         })
     }
     monkeypatch.setenv('USER_POOL_ID', 'test-pool-id')
-    monkeypatch.setenv('CLIENT_ID', 'test-client-id')
+    monkeypatch.setenv('REGISTRATION_MODE', 'AdminCreateUser')
 
     with patch('boto3.client') as mock_client:
         mock_cognito = mock_client.return_value
@@ -99,11 +129,18 @@ def test_signup_username_exists_exception(monkeypatch):
         # our custom UsernameExistsException class.
         mock_cognito.exceptions = type('Exceptions', (), {'UsernameExistsException': MockUsernameExistsException})()
 
-        # Set the sign_up method to raise the UsernameExistsException
-        # when called, simulating an existing user error from Cognito.
-        mock_cognito.sign_up.side_effect = mock_cognito.exceptions.UsernameExistsException("User already exists")
+        # Make admin_create_user raise the UsernameExistsException
+        mock_cognito.admin_create_user.side_effect = (
+            mock_cognito.exceptions.UsernameExistsException("User already exists")
+        )
 
         response = lambda_handler(event, None)
+
+        # Assert admin_create_user was actually called
+        mock_cognito.admin_create_user.assert_called_once()
+       
+        # Password should NOT be set if user creation failed
+        assert not getattr(mock_cognito, "admin_set_user_password", lambda: False).called
 
         assert response['statusCode'] == 409
         body = json.loads(response['body'])
