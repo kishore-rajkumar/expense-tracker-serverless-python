@@ -67,8 +67,8 @@ def lambda_handler(event, context):
     cognito_client = boto3.client('cognito-idp')
     MODE = os.environ.get('REGISTRATION_MODE', 'SignUp')
 
-    # Cognito signup
     try:
+        # Cognito Admin Creates User
         if MODE == 'AdminCreateUser':
             cognito_client.admin_create_user(
                 UserPoolId=USER_POOL_ID,
@@ -86,6 +86,7 @@ def lambda_handler(event, context):
                 Permanent=True
             )
         else:
+            # Cognito signup
             cognito_client.sign_up(
                 ClientId=CLIENT_ID,
                 Username=email,
