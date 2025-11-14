@@ -2,14 +2,25 @@ name: CI-CD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'bugfix/**'
+      - 'refactor/**'
+      - 'docs/**'
   pull_request:
-    branches: [main]
+    branches: 
+      - main
+      - develop
 
 jobs:
-  ci-cd:
+  lint-and-test:
     runs-on: ubuntu-latest
-
+    # Run for main, develop, and code branches except docs
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || 
+        startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/') || 
+        startsWith(github.ref, 'refs/heads/refactor/')
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
@@ -23,21 +34,73 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      # - name: Run Flake8
-      #   run: flake8 . --count --show-source --statistics
+      - name: Run Flake8
+        run: flake8 . --count --show-source --statistics
 
-      # - name: Run Tests
-      #   run: pytest tests/
+      - name: Run Tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src
+        run: pytest tests/
 
-      - name: Configure AWS Credentials
+  # docs-lint:
+  #   runs-on: ubuntu-latest
+  #   # Run only for documentation branches
+  #   if: startsWith(github.ref, 'refs/heads/docs/')
+  #   steps:
+  #     - name: Checkout Source
+  #       uses: actions/checkout@v4
+
+  #     - name: Lint Documentation
+  #       run: echo "Run your documentation linting scripts here (e.g. markdownlint)"
+        
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure AWS Credentials for Staging
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
           aws-region: ap-south-1
 
-      # - name: Build SAM Application
-      #   run: sam build
+      - name: Build SAM Application
+        run: sam build
 
-      # - name: Deploy with SAM
-      #   run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name expense-tracker-dev --capabilities CAPABILITY_IAM
+      - name: Deploy with SAM to Staging
+        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name expense-tracker-staging --capabilities CAPABILITY_IAM
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure AWS Credentials for Production
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}
+          aws-region: ap-south-1
+
+      - name: Build SAM Application
+        run: sam build
+
+      - name: Deploy with SAM to Production
+        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name expense-tracker-prod --capabilities CAPABILITY_IAM

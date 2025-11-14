@@ -1,2 +1,6 @@
 # AWS SAM build artifacts
 .aws-sam/
+.venv
+__pycache__/
+*.py[cod]
+
