@@ -138,7 +138,7 @@ def test_admin_create_user_already_exists_exception(monkeypatch):
 
         # Assert admin_create_user was actually called
         mock_cognito.admin_create_user.assert_called_once()
-       
+
         # Password should NOT be set if user creation failed
         assert not getattr(mock_cognito, "admin_set_user_password", lambda: False).called
 
