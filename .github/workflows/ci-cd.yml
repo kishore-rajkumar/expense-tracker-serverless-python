@@ -74,7 +74,7 @@ jobs:
           aws-region: ap-south-1
 
       - name: Build SAM Application
-        run: sam build
+        run: sam build --template infrastructure/template.yaml
 
       - name: Deploy with SAM to Staging
         run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name expense-tracker-staging --capabilities CAPABILITY_IAM
