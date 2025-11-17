@@ -71,7 +71,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
-          aws-region: ap-south-1
+          aws-region: ${{env.AWS_REGION_STAGING}}
 
       - name: Build SAM Application
         run: sam build --template infrastructure/template.yaml
