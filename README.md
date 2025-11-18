@@ -193,6 +193,21 @@ This documentation provides a clear guide for anyone contributing to or operatin
 
 ---
 
+#### Authentication Setup
+
+This project uses AWS Cognito User Pool for user authentication.  
+Follow the setup guide in [docs/auth.md](docs/auth.md) to configure your Cognito resources and update your environment variables.
+
+Add the following variables to your `.env` file (see `.env.example`):
+```
+COGNITO_USER_POOL_ID=
+COGNITO_APP_CLIENT_ID=
+COGNITO_REGION=
+```
+(See [docs/auth.md](docs/auth.md) for details.)
+
+---
+
 ## Troubleshooting
 
 - CI/CD workflow or setup issues?  
