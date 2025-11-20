@@ -33,6 +33,19 @@ The pipeline is implemented using GitHub Actions and deploys the AWS SAM serverl
 
 **8. Deploy to AWS**
   - Executes sam deploy to create/update the stack in your AWS account.
+  - **Note:**
+    The `sam deploy` step requires an S3 bucket to store deployment artifacts.
+    The bucket name must be specified using the `--s3-bucket` flag and must already exist in your account.
+    The bucket name should be passed as an environment variable or secret (e.g., `AWS_S3_DEPLOY_BUCKET`) in your GitHub Actions workflow.
+
+    Example command:
+    ```
+    - name: SAM Deploy
+      run: sam deploy --s3-bucket ${{ secrets.AWS_S3_DEPLOY_BUCKET }} --region ap-south-1 ...
+    ```
+
+    Make sure the bucket is unique across AWS and has proper permissions for deploys.
+    See the main README deployment section for more details.
 
 ## Secrets & Environment Variables
 The following secrets must be set in your GitHub repository:

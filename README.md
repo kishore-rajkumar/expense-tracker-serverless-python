@@ -173,6 +173,13 @@ Ensure these variables are configured correctly in your deployment environment:
 - `COGNITO_APP_CLIENT_ID`: The User Pool Client ID (`ExpenseTrackerClient`)
 - `AWS_REGION`: AWS region where resources are deployed
 
+Be sure to set your target AWS region via environment variable, not as a hardcoded value:   
+`AWS_REGION=`   
+
+Configure your CI/CD pipeline to use this variable during deploys. 
+
+See [docs/ci-cd-pipeline.md](docs/ci-cd-pipeline.md) for sample workflow setup.
+
 ### SAM Outputs
 
 After deployment using SAM, the following outputs are available:
@@ -188,8 +195,22 @@ After deployment using SAM, the following outputs are available:
 - Follow least privilege and security best practices, including use of MFA and secure token handling.
 
 
-
 This documentation provides a clear guide for anyone contributing to or operating the expense tracker project on how authentication and authorization is configured via Cognito User Pools and integrated with API Gateway.
+
+---
+
+#### Authentication Setup
+
+This project uses AWS Cognito User Pool for user authentication.  
+Follow the setup guide in [docs/auth.md](docs/auth.md) to configure your Cognito resources and update your environment variables.
+
+Add the following variables to your `.env` file (see `.env.example`):
+```
+COGNITO_USER_POOL_ID=
+COGNITO_APP_CLIENT_ID=
+COGNITO_REGION=
+```
+(See [docs/auth.md](docs/auth.md) for details.)
 
 ---
 
