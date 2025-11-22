@@ -88,8 +88,38 @@ Resources:
             Identity:
               Header: Authorization
               ValidationExpression: '^Bearer [-0-9a-zA-Z\\.]*$'
-
   
+  # API Key
+  ExpenseTrackerApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: ExpenseTrackerApiKey
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref ExpenseTrackerApi
+          StageName: prod
+  
+  # API Usage Plan
+  ExpenseTrackerApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: ExpenseTrackerApiUsagePlan
+      Description: Usage plan to limit API requests
+      ApiStages:
+        - ApiId: !Ref ExpenseTrackerApi
+          Stage: prod
+      Throttle:
+        RateLimit: 5      # requests per second
+        BurstLimit: 10
+  
+  # Api Usage Plan Key
+  ExpenseTrackerApiUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ExpenseTrackerApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref ExpenseTrackerApiUsagePlan
+
   # DynamoDB Table
   ExpensesTable:
     Type: AWS::DynamoDB::Table
