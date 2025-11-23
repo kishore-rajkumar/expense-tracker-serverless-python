@@ -95,9 +95,9 @@ Resources:
     Properties:
       Name: ExpenseTrackerApiKey
       Enabled: true
-      StageKeys:
-        - RestApiId: !Ref ExpenseTrackerApi
-          StageName: prod
+      # StageKeys:
+      #   - RestApiId: !Ref ExpenseTrackerApi
+      #     StageName: prod
   
   # API Usage Plan
   ExpenseTrackerApiUsagePlan:
@@ -105,14 +105,14 @@ Resources:
     Properties:
       UsagePlanName: ExpenseTrackerApiUsagePlan
       Description: Usage plan to limit API requests
-      ApiStages:
-        - ApiId: !Ref ExpenseTrackerApi
-          Stage: prod
+      # ApiStages:
+      #   - ApiId: !Ref ExpenseTrackerApi
+      #     Stage: prod
       Throttle:
         RateLimit: 5      # requests per second
         BurstLimit: 10
   
-  # Api Usage Plan Key
+  # Api Usage Plan sudo Key
   ExpenseTrackerApiUsagePlanKey:
     Type: AWS::ApiGateway::UsagePlanKey
     Properties:
