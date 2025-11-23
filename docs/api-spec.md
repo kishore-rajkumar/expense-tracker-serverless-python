@@ -22,6 +22,18 @@ This API powers the expense tracker serverless SaaS, providing endpoints for man
 - User-level authentication is enforced on all resources.
 - Admin endpoints may be added in future releases.
 
+
+## API Rate Limiting and Usage Plans
+- To protect against abusive or excessive request traffic, the Expense Tracker API enforces rate limiting using AWS API Gateway Usage Plans.
+- All clients consuming the API (including the user registration endpoint) must provide an API key via the x-api-key HTTP header.
+- This API key is linked to a usage plan that throttles requests to a baseline of:
+  - Rate limit: 5 requests per second
+  - Burst limit: 10 requests
+- Rate limiting applies cumulatively to all API endpoints under the prod stage of the ExpenseTrackerApi.
+- This foundational control helps prevent denial-of-service (DoS) and brute-force attacks while maintaining performance and availability.
+- Future enhancements may include CAPTCHA or bot protections, especially for publicly exposed endpoints.
+
+
 ## Entity Overview & Relationships
 
 ### Entities
