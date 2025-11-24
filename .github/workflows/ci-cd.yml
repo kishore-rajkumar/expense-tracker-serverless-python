@@ -37,10 +37,15 @@ jobs:
       - name: Run Flake8
         run: flake8 . --count --show-source --statistics
 
-      - name: Run Tests
+      - name: Run Unit Tests
         env:
           PYTHONPATH: ${{ github.workspace }}/src
-        run: pytest tests/
+        run: pytest tests/unit
+
+      - name: Run Integration Tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src
+        run: pytest tests/integration
 
   # docs-lint:
   #   runs-on: ubuntu-latest
