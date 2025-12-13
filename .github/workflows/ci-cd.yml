@@ -82,7 +82,7 @@ jobs:
         run: sam build --template infrastructure/template.yaml
 
       - name: Deploy with SAM to Staging
-        run: sam deploy --stack-name expense-tracker-staging --capabilities CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3
+        run: sam deploy --stack-name expense-tracker-stage --capabilities  CAPABILITY_IAM --config-env staging --parameter-overrides Environment=staging --resolve-s3
 
   deploy-production:
     runs-on: ubuntu-latest
