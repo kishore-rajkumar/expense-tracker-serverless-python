@@ -51,7 +51,7 @@ Resources:
   ExpenseTrackerCognitoDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
-      Domain: !Sub "UserPoolDomain-${Environment}-${AWS::StackName}"
+      Domain: !Sub "user-pool-domain-${Environment}-${AWS::StackName}"
       UserPoolId: !Ref ExpenseTrackerUserPool
 
   ExpenseTrackerUserPoolClient:
@@ -76,10 +76,10 @@ Resources:
         - COGNITO
       CallbackURLs:
         # - https://localhost:3000/callback   # replace with actual domain url
-        - ${FrontendCallbackUrl}
+        - !Ref FrontendCallbackUrl
       LogoutURLs:
         # - https://localhost:3000/logout     # replace with actual domain url
-        - ${FrontendLogoutURLs}
+        - !Ref FrontendLogoutURLs
 
   # Cognito Groups
   ExpenseTrackerUserPoolAdminGroup:
