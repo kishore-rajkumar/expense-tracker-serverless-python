@@ -17,10 +17,15 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    # Run for pushes AND PRs (except docs branches)
+    if: |
+      github.event_name != 'pull_request' ||
+      (github.event_name == 'pull_request' && 
+       github.base_ref == 'main' || github.base_ref == 'develop')
     # Run for main, develop, and code branches except docs
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || 
-        startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/') || 
-        startsWith(github.ref, 'refs/heads/refactor/')
+    # if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || 
+    #     startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/') || 
+    #     startsWith(github.ref, 'refs/heads/refactor/')
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
@@ -82,7 +87,7 @@ jobs:
         run: sam build --template infrastructure/template.yaml
 
       - name: Deploy with SAM to Staging
-        run: sam deploy --stack-name expense-tracker-staging --capabilities CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3
+        run: sam deploy --stack-name expense-tracker-stage --capabilities  CAPABILITY_IAM --config-env staging --parameter-overrides Environment=staging --resolve-s3
 
   deploy-production:
     runs-on: ubuntu-latest
