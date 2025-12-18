@@ -3,9 +3,6 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 
-_CLIENT_ID = os.environ["COGNITO_CLIENT_ID"]
-_REGION = os.environ.get("AWS_REGION", "us-east-1")
-
 
 def _response(status_code: int, body: dict) -> dict:
     return {
@@ -16,6 +13,9 @@ def _response(status_code: int, body: dict) -> dict:
 
 
 def handler(event, _context):
+    _CLIENT_ID = os.environ["COGNITO_CLIENT_ID"]
+    _REGION = os.environ.get("AWS_REGION", "us-east-1")
+
     if not _CLIENT_ID:
         return _response(500, {"message": "COGNITO_CLIENT_ID is not configured"})
 

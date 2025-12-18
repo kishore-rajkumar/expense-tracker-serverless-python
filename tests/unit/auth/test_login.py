@@ -2,11 +2,10 @@ from unittest.mock import patch, MagicMock
 import json
 import os
 from botocore.exceptions import ClientError
+from auth import login
 
 os.environ["COGNITO_CLIENT_ID"] = "test-client-id"
 os.environ["AWS_REGION"] = "us-east-1"
-
-from auth import login
 
 
 def _event(body: dict) -> dict:
