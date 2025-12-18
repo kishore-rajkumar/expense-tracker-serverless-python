@@ -1,6 +1,7 @@
 # AWS SAM build artifacts
 .aws-sam/
 .venv
+venv
 __pycache__/
 *.py[cod]
 infrastructure/env.local.json
