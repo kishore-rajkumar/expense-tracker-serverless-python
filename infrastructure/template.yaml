@@ -98,7 +98,7 @@ Resources:
   ExpenseTrackerApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: prod
+      StageName: prod # make this dynamic environment
       Auth:
         DefaultAuthorizer: CognitoAuthorizer
         Authorizers:
@@ -228,8 +228,32 @@ Resources:
             RestApiId: !Ref ExpenseTrackerApi
             Path: /user-registration
             Method: POST
-
   
+  # Lambda Function: User Login API
+  LoginFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../src/auth/
+      Handler: login.handler
+      # Runtime: python3.12
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Statement:
+          - Effect: Allow
+            Action:
+              - cognito-idp:InitiateAuth
+            Resource: "*"  # later narrow to specific UserPool client ARN
+      Events:
+        ApiLogin:
+          Type: Api
+          Properties:
+            Path: /auth/login
+            Method: post
+      Environment:
+        Variables:
+          COGNITO_CLIENT_ID: !Ref ExpenseTrackerUserPoolClient
+          # AWS_REGION: !Ref AWS::Region
+
 Outputs:
 
   ApiUrl:
@@ -247,3 +271,10 @@ Outputs:
   CognitoHostedUI:
     Description: "Cognito Hosted UI URL"
     Value: !Sub "https://${ExpenseTrackerCognitoDomain}.auth.${AWS::Region}.amazoncognito.com/login?client_id=${ExpenseTrackerUserPoolClient}&response_type=code&scope=email+openid+profile&redirect_uri=${FrontendCallbackUrl}"
+
+  LoginApiUrl:
+    Description: Login API endpoint URL
+    Value: !Sub "https://${ExpenseTrackerApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/auth/login"
+
+
+
