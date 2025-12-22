@@ -1,0 +1,14 @@
+{
+  "resource": "/auth/login",
+  "path": "/auth/login",
+  "httpMethod": "POST",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {},
+  "body": "{\"username\":\"rajkumar.kishore@gmail.com\",\"password\":\"User1@2025\"}",
+  "isBase64Encoded": false
+}
