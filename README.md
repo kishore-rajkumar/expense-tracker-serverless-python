@@ -212,6 +212,10 @@ COGNITO_REGION=
 ```
 (See [docs/auth.md](docs/auth.md) for details.)
 
+
+For invoking the Cognito-backed `LoginFunction` locally with `sam local invoke` (including automatic resolution of the User Pool App ClientId and generation of `infrastructure/env.local.json`), see the **Local Login Testing (SAM + Cognito)** section in [docs/auth.md](docs/auth.md).
+
+
 ---
 
 ## Troubleshooting
