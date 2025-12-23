@@ -45,8 +45,20 @@ def handler(event, _context):
     except ClientError as exc:
         error = exc.response.get("Error", {})
         code = error.get("Code", "ClientError")
-        message = error.get("Message", str(exc))
-        status = 401 if code in {"NotAuthorizedException", "UserNotFoundException"} else 500
+        # message = error.get("Message", str(exc))
+        # status = 401 if code in {"NotAuthorizedException", "UserNotFoundException"} else 500
+        # Default values
+        status = 500
+        message = "internal server error"
+
+        # Known auth failures → generic 401
+        if code in {"NotAuthorizedException", "UserNotFoundException"}:
+            status = 401
+            message = "incorrect username or password"
+        elif code == "UserNotConfirmedException":
+            status = 403
+            message = "user is not confirmed"
+
         return _response(status, {"errorCode": code, "message": message})
 
     auth = result.get("AuthenticationResult", {})
