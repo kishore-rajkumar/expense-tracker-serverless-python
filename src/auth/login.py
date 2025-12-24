@@ -31,12 +31,17 @@ def handler(event, _context):
     if not username or not password:
         return _response(400, {"message": "username and password are required"})
 
-    _cognito = boto3.client("cognito-idp", region_name=_REGION)
+    status, body = authenticate_user(username, password, _CLIENT_ID, _REGION)
+    return _response(status, body)
+
+
+def authenticate_user(username: str, password: str, client_id: str, region: str):
+    cognito = boto3.client("cognito-idp", region_name=region)
 
     try:
-        result = _cognito.initiate_auth(
+        result = cognito.initiate_auth(
             AuthFlow="USER_PASSWORD_AUTH",
-            ClientId=_CLIENT_ID,
+            ClientId=client_id,
             AuthParameters={
                 "USERNAME": username,
                 "PASSWORD": password,
@@ -45,16 +50,22 @@ def handler(event, _context):
     except ClientError as exc:
         error = exc.response.get("Error", {})
         code = error.get("Code", "ClientError")
-        message = error.get("Message", str(exc))
-        status = 401 if code in {"NotAuthorizedException", "UserNotFoundException"} else 500
-        return _response(status, {"errorCode": code, "message": message})
+
+        status = 500
+        message = "internal server error"
+
+        if code in {"NotAuthorizedException", "UserNotFoundException"}:
+            status = 401
+            message = "incorrect username or password"
+        elif code == "UserNotConfirmedException":
+            status = 403
+            message = "user is not confirmed"
+
+        return status, {"errorCode": code, "message": message}
 
     auth = result.get("AuthenticationResult", {})
-    return _response(
-        200,
-        {
-            "accessToken": auth.get("AccessToken"),
-            "idToken": auth.get("IdToken"),
-            "refreshToken": auth.get("RefreshToken"),
-        },
-    )
+    return 200, {
+        "accessToken": auth.get("AccessToken"),
+        "idToken": auth.get("IdToken"),
+        "refreshToken": auth.get("RefreshToken"),
+    }
