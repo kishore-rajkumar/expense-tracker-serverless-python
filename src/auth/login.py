@@ -60,6 +60,9 @@ def authenticate_user(username: str, password: str, client_id: str, region: str)
         elif code == "UserNotConfirmedException":
             status = 403
             message = "user is not confirmed"
+        elif code == "PasswordResetRequiredException":
+            status = 403
+            message = "password reset required"
 
         return status, {"errorCode": code, "message": message}
 
