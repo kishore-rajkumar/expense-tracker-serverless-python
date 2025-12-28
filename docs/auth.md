@@ -96,6 +96,23 @@ If everything is configured correctly, the output should be a `200` response wit
 
 The `infrastructure/events/login_success.json` file contains an API Gateway proxy event for a successful login request. You can duplicate and tweak this file (e.g., wrong password, missing fields) to exercise other paths in `LoginFunction`.
 
-## 7. References
+## 7. ## Rate Limiting & Brute Force Protection
+
+### API Gateway
+- `/auth/login` (POST): **10 req/sec, burst 20** [Method-level throttling]
+- Other endpoints: **100 req/sec, burst 200**
+
+### Testing
+ab -n 50 -c 15 -p payload.json -T "application/json"
+https://bvmfy0ka84.execute-api.us-east-1.amazonaws.com/dev/auth/login/
+
+Expected: ~20 success → 30+ throttled (429)
+
+### Cognito Built-in
+- Per-user login throttling (`TooManyRequestsException`)
+- Account lockout after repeated failures
+
+
+## 8. References
 
 - [AWS Cognito User Pools documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html)
