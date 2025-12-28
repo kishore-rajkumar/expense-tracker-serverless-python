@@ -98,7 +98,17 @@ Resources:
   ExpenseTrackerApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: prod # make this dynamic environment
+      # StageName: prod # make this dynamic environment
+      StageName: !Ref Environment
+      MethodSettings:
+        - HttpMethod: POST
+          ResourcePath: /auth/login
+          ThrottlingRateLimit: 5
+          ThrottlingBurstLimit: 10
+        - HttpMethod: POST
+          ResourcePath: /auth/login/
+          ThrottlingRateLimit: 5
+          ThrottlingBurstLimit: 10
       Auth:
         DefaultAuthorizer: CognitoAuthorizer
         Authorizers:
@@ -247,8 +257,11 @@ Resources:
         ApiLogin:
           Type: Api
           Properties:
+            RestApiId: !Ref ExpenseTrackerApi          # ← NEW: Link to explicit API
             Path: /auth/login
             Method: post
+            Auth:                    # ← CRITICAL FIX: Bypass Cognito authorizer
+              Authorizer: NONE       # Login works WITHOUT JWT token!
       Environment:
         Variables:
           COGNITO_CLIENT_ID: !Ref ExpenseTrackerUserPoolClient
