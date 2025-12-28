@@ -144,6 +144,30 @@ def test_password_reset_required_returns_403(mock_boto_client):
     assert body["errorCode"] == "PasswordResetRequiredException"
 
 
+@patch("boto3.client")
+def test_login_too_many_requests_returns_429(mock_boto_client):
+    mock_cognito = MagicMock()
+    mock_boto_client.return_value = mock_cognito
+    mock_cognito.initiate_auth.side_effect = ClientError(
+        {
+            "Error": {
+                "Code": "TooManyRequestsException",
+                "Message": "Rate exceeded",
+            }
+        },
+        "InitiateAuth",
+    )
+
+    event = _event({"username": "user@example.com", "password": "Pass123!"})
+
+    resp = login.handler(event, None)
+
+    assert resp["statusCode"] == 429
+    body = json.loads(resp["body"])
+    assert body["message"] == "too many attempts, please try again later"
+    assert body["errorCode"] == "TooManyRequestsException"
+
+
 def test_login_with_apigw_proxy_event_shape():
     body = {"username": "user@example.com", "password": "Pass123!"}
     event = {

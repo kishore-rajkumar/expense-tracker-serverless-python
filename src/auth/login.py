@@ -63,6 +63,9 @@ def authenticate_user(username: str, password: str, client_id: str, region: str)
         elif code == "PasswordResetRequiredException":
             status = 403
             message = "password reset required"
+        elif code == "TooManyRequestsException":
+            status = 429
+            message = "too many attempts, please try again later"
 
         return status, {"errorCode": code, "message": message}
 
