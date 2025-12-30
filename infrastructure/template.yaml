@@ -15,9 +15,9 @@ Parameters:
     Type: String
     AllowedValues:
       - dev
-      - staging
-      - production
-    Default: staging
+      - stage
+      - prod
+    Default: stage
 
 Globals:
   Function:
