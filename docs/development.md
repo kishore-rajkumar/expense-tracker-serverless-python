@@ -59,7 +59,7 @@ sam local start-api
 
 ## 7. Deactivate and Cleanup
 ```deactivate  # Exit virtual environment
-rm -rf .venv  # Optional: remove when switching projects
+rm -rf .venv  # Optional: remove when switching projects 
 ```
 
 **Note:** Add .venv/ to .gitignore. For CI/CD, GitHub Actions handles dependencies via requirements.txt without local venv.
