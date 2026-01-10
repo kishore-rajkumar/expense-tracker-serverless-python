@@ -93,6 +93,7 @@ flake8 .
 
 - Project management via GitHub Projects ([see board](https://github.com/kishore-rajkumar/expense-tracker-serverless-python/projects))
 - Execution roadmap in [`docs/project-execution-steps-order.md`](./docs/project-execution-steps-order.md)
+- Local Development Environment Setup [`docs/development.md`](./docs/development.md)
 - Branch/PR rules covered in [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 
 ---
