@@ -144,6 +144,21 @@ Resources:
       UsagePlanId: !Ref ExpenseTrackerApiUsagePlan
 
   # DynamoDB Table
+  LockoutsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref LockoutsTableName
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        Enabled: true
+        AttributeName: ttl
+
   # ExpensesTable:
   #   Type: AWS::DynamoDB::Table
   #   Properties:
