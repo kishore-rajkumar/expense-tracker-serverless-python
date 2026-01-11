@@ -75,6 +75,7 @@ def authenticate_user(username: str, password: str, client_id: str, region: str)
         if code in {"NotAuthorizedException", "UserNotFoundException"}:
             status = 401
             message = "incorrect username or password"
+            record_failed_attempt(username)
         elif code == "UserNotConfirmedException":
             status = 403
             message = "user is not confirmed"
@@ -93,6 +94,24 @@ def authenticate_user(username: str, password: str, client_id: str, region: str)
         "idToken": auth.get("IdToken"),
         "refreshToken": auth.get("RefreshToken"),
     }
+
+
+def record_failed_attempt(username: str):
+    lockouts = get_lockouts_table()
+    now = int(time.time())
+    
+    # Atomic counter increment
+    resp = lockouts.update_item(
+        Key={"username": username},
+        UpdateExpression="SET attempts = if_not_exists(attempts, :start) + :inc, last_attempt = :now, ttl = :ttl",
+        ExpressionAttributeValues={
+            ":start": 0,
+            ":inc": 1,
+            ":now": now,
+            ":ttl": now + LOCKOUT_WINDOW + TTL_BUFFER,
+        },
+        ReturnValues="UPDATED_NEW"
+    )
 
 
 def is_locked_out(username: str):

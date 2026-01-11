@@ -227,13 +227,48 @@ def test_login_locked_user_returns_423(mock_boto_client, mock_is_locked_out):
     mock_boto_client.assert_not_called()
 
 
+@patch("auth.login.record_failed_attempt")
+@patch("auth.login.is_locked_out")
+@patch("boto3.resource")
+def test_failed_login_increments_counter(mock_boto_resource, mock_is_locked_out, mock_record_attempt):
+    mock_is_locked_out.return_value = (False, None)  # Initially not locked
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
+    mock_table.get_item.return_value = {}  # No lockout
+    
+    event = _event({"username": "user@example.com", "password": "wrong"})
+    
+    # Test both failure cases that should increment counter
+    failure_cases = [
+        ("NotAuthorizedException", "Incorrect username or password."),
+        ("UserNotFoundException", "User does not exist.")
+    ]
+    
+    for error_code, error_msg in failure_cases:
+        with patch("boto3.client") as mock_boto_client:
+            mock_cognito = MagicMock()
+            mock_boto_client.return_value = mock_cognito
+            mock_cognito.initiate_auth.side_effect = ClientError(
+                {"Error": {"Code": error_code, "Message": error_msg}}, "InitiateAuth"
+            )
+            
+            resp = login.handler(event, None)
+            
+            assert resp["statusCode"] == 401
+            body = json.loads(resp["body"])
+            assert body["message"] == "incorrect username or password"
+            assert body["errorCode"] == error_code
+            mock_record_attempt.assert_called_once_with("user@example.com")
+            mock_record_attempt.reset_mock()  # Reset for next iteration
+
+
 @patch("boto3.resource")
 def test_login_with_apigw_proxy_event_shape(mock_boto_resource):
     # Mock DynamoDB table 
     mock_table = MagicMock() 
     mock_boto_resource.return_value.Table.return_value = mock_table 
     mock_table.get_item.return_value = {}  # no lockout
-    
+
     body = {"username": "user@example.com", "password": "Pass123!"}
     event = {
         "resource": "/auth/login",
