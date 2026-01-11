@@ -28,9 +28,9 @@ def test_login_requires_username_and_password():
 @patch("boto3.client")
 @patch("boto3.resource")
 def test_login_success_returns_tokens(mock_boto_resource, mock_boto_client):
-    # Mock DynamoDB table 
-    mock_table = MagicMock() 
-    mock_boto_resource.return_value.Table.return_value = mock_table 
+    # Mock DynamoDB table
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # no lockout
 
     mock_cognito = MagicMock()
@@ -60,9 +60,9 @@ def test_login_success_returns_tokens(mock_boto_resource, mock_boto_client):
 @patch("boto3.client")
 @patch("boto3.resource")
 def test_login_bad_credentials_returns_401(mock_boto_resource, mock_boto_client):
-    # Mock DynamoDB table 
-    mock_table = MagicMock() 
-    mock_boto_resource.return_value.Table.return_value = mock_table 
+    # Mock DynamoDB table
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # no lockout
 
     mock_cognito = MagicMock()
@@ -87,9 +87,9 @@ def test_login_bad_credentials_returns_401(mock_boto_resource, mock_boto_client)
 @patch("boto3.client")
 @patch("boto3.resource")
 def test_login_user_not_found_returns_401(mock_boto_resource, mock_boto_client):
-    # Mock DynamoDB table 
-    mock_table = MagicMock() 
-    mock_boto_resource.return_value.Table.return_value = mock_table 
+    # Mock DynamoDB table
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # no lockout
 
     mock_cognito = MagicMock()
@@ -117,9 +117,9 @@ def test_login_user_not_found_returns_401(mock_boto_resource, mock_boto_client):
 @patch("boto3.client")
 @patch("boto3.resource")
 def test_login_unconfirmed_user_returns_403(mock_boto_resource, mock_boto_client):
-    # Mock DynamoDB table 
-    mock_table = MagicMock() 
-    mock_boto_resource.return_value.Table.return_value = mock_table 
+    # Mock DynamoDB table
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # no lockout
 
     mock_cognito = MagicMock()
@@ -147,9 +147,9 @@ def test_login_unconfirmed_user_returns_403(mock_boto_resource, mock_boto_client
 @patch("boto3.client")
 @patch("boto3.resource")
 def test_password_reset_required_returns_403(mock_boto_resource, mock_boto_client):
-    # Mock DynamoDB table 
-    mock_table = MagicMock() 
-    mock_boto_resource.return_value.Table.return_value = mock_table 
+    # Mock DynamoDB table
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # no lockout
 
     mock_cognito = MagicMock()
@@ -177,9 +177,9 @@ def test_password_reset_required_returns_403(mock_boto_resource, mock_boto_clien
 @patch("boto3.client")
 @patch("boto3.resource")
 def test_login_too_many_requests_returns_429(mock_boto_resource, mock_boto_client):
-    # Mock DynamoDB table 
-    mock_table = MagicMock() 
-    mock_boto_resource.return_value.Table.return_value = mock_table 
+    # Mock DynamoDB table
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # no lockout
 
     mock_cognito = MagicMock()
@@ -235,15 +235,15 @@ def test_failed_login_increments_counter(mock_boto_resource, mock_is_locked_out,
     mock_table = MagicMock()
     mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # No lockout
-    
+
     event = _event({"username": "user@example.com", "password": "wrong"})
-    
+
     # Test both failure cases that should increment counter
     failure_cases = [
         ("NotAuthorizedException", "Incorrect username or password."),
         ("UserNotFoundException", "User does not exist.")
     ]
-    
+
     for error_code, error_msg in failure_cases:
         with patch("boto3.client") as mock_boto_client:
             mock_cognito = MagicMock()
@@ -251,9 +251,9 @@ def test_failed_login_increments_counter(mock_boto_resource, mock_is_locked_out,
             mock_cognito.initiate_auth.side_effect = ClientError(
                 {"Error": {"Code": error_code, "Message": error_msg}}, "InitiateAuth"
             )
-            
+
             resp = login.handler(event, None)
-            
+
             assert resp["statusCode"] == 401
             body = json.loads(resp["body"])
             assert body["message"] == "incorrect username or password"
@@ -264,9 +264,9 @@ def test_failed_login_increments_counter(mock_boto_resource, mock_is_locked_out,
 
 @patch("boto3.resource")
 def test_login_with_apigw_proxy_event_shape(mock_boto_resource):
-    # Mock DynamoDB table 
-    mock_table = MagicMock() 
-    mock_boto_resource.return_value.Table.return_value = mock_table 
+    # Mock DynamoDB table
+    mock_table = MagicMock()
+    mock_boto_resource.return_value.Table.return_value = mock_table
     mock_table.get_item.return_value = {}  # no lockout
 
     body = {"username": "user@example.com", "password": "Pass123!"}
