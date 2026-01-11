@@ -89,6 +89,10 @@ def authenticate_user(username: str, password: str, client_id: str, region: str)
         return status, {"errorCode": code, "message": message}
 
     auth = result.get("AuthenticationResult", {})
+    
+    # Reset lockout counter on successful login
+    clear_lockout(username)
+    
     return 200, {
         "accessToken": auth.get("AccessToken"),
         "idToken": auth.get("IdToken"),
@@ -101,7 +105,7 @@ def record_failed_attempt(username: str):
     now = int(time.time())
     
     # Atomic counter increment
-    resp = lockouts.update_item(
+    lockouts.update_item(
         Key={"username": username},
         UpdateExpression="SET attempts = if_not_exists(attempts, :start) + :inc, last_attempt = :now, ttl = :ttl",
         ExpressionAttributeValues={
@@ -134,6 +138,11 @@ def is_locked_out(username: str):
         return True, remaining
 
     return False, None
+
+
+def clear_lockout(username: str):
+    lockouts = get_lockouts_table()
+    lockouts.delete_item(Key={"username": username})
 
 
 def get_lockouts_table():
