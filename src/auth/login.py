@@ -1,7 +1,13 @@
 import json
 import os
 import boto3
+import time
 from botocore.exceptions import ClientError
+
+
+LOCKOUT_AFTER = 5       # attempts
+LOCKOUT_WINDOW = 900    # 15 minutes
+TTL_BUFFER = 3600       # extra 1 hour
 
 
 def _response(status_code: int, body: dict) -> dict:
@@ -30,6 +36,18 @@ def handler(event, _context):
 
     if not username or not password:
         return _response(400, {"message": "username and password are required"})
+
+    # Check account locked state
+    locked, remaining = is_locked_out(username)
+    if locked:
+        return _response(
+            423,
+            {
+               "errorCode": "ACCOUNT_LOCKED",
+               "message": "account locked due to too many failed attempts. please try again later.",
+               "retryAfterSeconds": remaining,
+            }
+        )
 
     status, body = authenticate_user(username, password, _CLIENT_ID, _REGION)
     return _response(status, body)
@@ -75,3 +93,30 @@ def authenticate_user(username: str, password: str, client_id: str, region: str)
         "idToken": auth.get("IdToken"),
         "refreshToken": auth.get("RefreshToken"),
     }
+
+
+def is_locked_out(username: str):
+    lockouts = get_lockouts_table()
+    now = int(time.time())
+    resp = lockouts.get_item(Key={"username": username})
+    item = resp.get("Item")
+    if not item:
+        return False, None
+
+    attempts = int(item.get("attempts", 0))
+    last_attempt = int(item.get("last_attempt", 0))
+
+    if attempts < LOCKOUT_AFTER:
+        return False, None
+
+    unlock_at = last_attempt + LOCKOUT_WINDOW
+    remaining = unlock_at - now
+    if remaining > 0:
+        return True, remaining
+
+    return False, None
+
+
+def get_lockouts_table():
+    dynamodb = boto3.resource("dynamodb")
+    return dynamodb.Table(os.environ.get("LOCKOUT_TABLE_NAME", "Lockouts-dev"))

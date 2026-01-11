@@ -26,7 +26,13 @@ def test_login_requires_username_and_password():
 
 
 @patch("boto3.client")
-def test_login_success_returns_tokens(mock_boto_client):
+@patch("boto3.resource")
+def test_login_success_returns_tokens(mock_boto_resource, mock_boto_client):
+    # Mock DynamoDB table 
+    mock_table = MagicMock() 
+    mock_boto_resource.return_value.Table.return_value = mock_table 
+    mock_table.get_item.return_value = {}  # no lockout
+
     mock_cognito = MagicMock()
     mock_boto_client.return_value = mock_cognito
     mock_cognito.initiate_auth.return_value = {
@@ -52,7 +58,13 @@ def test_login_success_returns_tokens(mock_boto_client):
 
 
 @patch("boto3.client")
-def test_login_bad_credentials_returns_401(mock_boto_client):
+@patch("boto3.resource")
+def test_login_bad_credentials_returns_401(mock_boto_resource, mock_boto_client):
+    # Mock DynamoDB table 
+    mock_table = MagicMock() 
+    mock_boto_resource.return_value.Table.return_value = mock_table 
+    mock_table.get_item.return_value = {}  # no lockout
+
     mock_cognito = MagicMock()
     mock_boto_client.return_value = mock_cognito
     mock_cognito.initiate_auth.side_effect = ClientError(
@@ -73,7 +85,13 @@ def test_login_bad_credentials_returns_401(mock_boto_client):
 
 
 @patch("boto3.client")
-def test_login_user_not_found_returns_401(mock_boto_client):
+@patch("boto3.resource")
+def test_login_user_not_found_returns_401(mock_boto_resource, mock_boto_client):
+    # Mock DynamoDB table 
+    mock_table = MagicMock() 
+    mock_boto_resource.return_value.Table.return_value = mock_table 
+    mock_table.get_item.return_value = {}  # no lockout
+
     mock_cognito = MagicMock()
     mock_boto_client.return_value = mock_cognito
     mock_cognito.initiate_auth.side_effect = ClientError(
@@ -97,7 +115,13 @@ def test_login_user_not_found_returns_401(mock_boto_client):
 
 
 @patch("boto3.client")
-def test_login_unconfirmed_user_returns_403(mock_boto_client):
+@patch("boto3.resource")
+def test_login_unconfirmed_user_returns_403(mock_boto_resource, mock_boto_client):
+    # Mock DynamoDB table 
+    mock_table = MagicMock() 
+    mock_boto_resource.return_value.Table.return_value = mock_table 
+    mock_table.get_item.return_value = {}  # no lockout
+
     mock_cognito = MagicMock()
     mock_boto_client.return_value = mock_cognito
     mock_cognito.initiate_auth.side_effect = ClientError(
@@ -121,7 +145,13 @@ def test_login_unconfirmed_user_returns_403(mock_boto_client):
 
 
 @patch("boto3.client")
-def test_password_reset_required_returns_403(mock_boto_client):
+@patch("boto3.resource")
+def test_password_reset_required_returns_403(mock_boto_resource, mock_boto_client):
+    # Mock DynamoDB table 
+    mock_table = MagicMock() 
+    mock_boto_resource.return_value.Table.return_value = mock_table 
+    mock_table.get_item.return_value = {}  # no lockout
+
     mock_cognito = MagicMock()
     mock_boto_client.return_value = mock_cognito
     mock_cognito.initiate_auth.side_effect = ClientError(
@@ -145,7 +175,13 @@ def test_password_reset_required_returns_403(mock_boto_client):
 
 
 @patch("boto3.client")
-def test_login_too_many_requests_returns_429(mock_boto_client):
+@patch("boto3.resource")
+def test_login_too_many_requests_returns_429(mock_boto_resource, mock_boto_client):
+    # Mock DynamoDB table 
+    mock_table = MagicMock() 
+    mock_boto_resource.return_value.Table.return_value = mock_table 
+    mock_table.get_item.return_value = {}  # no lockout
+
     mock_cognito = MagicMock()
     mock_boto_client.return_value = mock_cognito
     mock_cognito.initiate_auth.side_effect = ClientError(
@@ -168,7 +204,36 @@ def test_login_too_many_requests_returns_429(mock_boto_client):
     assert body["errorCode"] == "TooManyRequestsException"
 
 
-def test_login_with_apigw_proxy_event_shape():
+@patch("auth.login.is_locked_out")
+@patch("boto3.client")
+def test_login_locked_user_returns_423(mock_boto_client, mock_is_locked_out):
+    # Arrange
+    mock_is_locked_out.return_value = (True, 300)  # 5 minutes remaining
+
+    event = _event({"username": "locked@example.com", "password": "Pass123!"})
+
+    # Act
+    resp = login.handler(event, None)
+
+    # Assert
+    assert resp["statusCode"] == 423
+    body = json.loads(resp["body"])
+    assert body["errorCode"] == "ACCOUNT_LOCKED"
+    assert "account locked" in body["message"]
+    assert mock_is_locked_out.called
+    assert body["retryAfterSeconds"] == 300
+
+    # Cognito must not be invoked if the account is locked
+    mock_boto_client.assert_not_called()
+
+
+@patch("boto3.resource")
+def test_login_with_apigw_proxy_event_shape(mock_boto_resource):
+    # Mock DynamoDB table 
+    mock_table = MagicMock() 
+    mock_boto_resource.return_value.Table.return_value = mock_table 
+    mock_table.get_item.return_value = {}  # no lockout
+    
     body = {"username": "user@example.com", "password": "Pass123!"}
     event = {
         "resource": "/auth/login",
